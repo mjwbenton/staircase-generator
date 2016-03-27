@@ -3,7 +3,7 @@ import ReactDOMServer from 'react-dom/server';
 
 import HtmlHeader from './components/HtmlHeader';
 
-import handleFrontMatter from './handle-front-matter';
+import handleFrontMatter from './transforms/handle-front-matter';
 import readContent from './read-content';
 
 readContent('./content').catch((err) => {
