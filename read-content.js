@@ -24,10 +24,10 @@ function readItems(contents_directory) {
                         return [directoryItem].concat(children);
                     });
                 } else {
-                    return fsp.readFile(path.valueOf(), UTF8).then((contents) => ({
+                    return fsp.readFile(path.valueOf(), UTF8).then((content) => ({
                         path,
                         isDirectory: info.isDirectory(),
-                        contents
+                        content
                     }));
                 }
             });

@@ -8,8 +8,6 @@ export default class Site {
             const filtered = filters.some((filter) => {
                 return filter(item);
             });
-            console.log(item.path.toString());
-            console.log(filtered);
             if (filtered) {
                 return item;
             }
