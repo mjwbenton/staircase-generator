@@ -1,16 +1,21 @@
 import fsp from 'fs-promise';
 import filepath from 'filepath';
+import Site from './site';
 
 const UTF8 = 'utf8';
 
 export default function readContents(contents_directory) {
+    return readItems(contents_directory).then((items) => new Site(items));
+}
+
+function readItems(contents_directory) {
     const content_path = filepath.create(contents_directory);
     return fsp.readdir(content_path.valueOf()).then((files) =>
         Promise.all(files.map((file) => {
             const path = content_path.append(file);
             return fsp.lstat(path.valueOf()).then((info) => {
                 if (info.isDirectory()) {
-                    return readContents(path.valueOf()).then((children) => {
+                    return readItems(path.valueOf()).then((children) => {
                         const directoryItem = {
                             path,
                             isDirectory: info.isDirectory(),

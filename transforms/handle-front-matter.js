@@ -1,11 +1,17 @@
 import { skipDirectories, skipMeta } from './skip-items';
 import yamlFront from 'yaml-front-matter';
 
-export default function handleFrontMatter(contents) {
-    return contents.filter(skipDirectories).filter(skipMeta).map((item) => {
+const CONTENT_KEY = '__content';
+
+export default function handleFrontMatter(site) {
+    return site.mapWithFilters([skipDirectories, skipMeta], (item) => {
+        const frontMatter = yamlFront.loadFront(item.contents);
+        const content = frontMatter[CONTENT_KEY];
+        delete frontMatter[CONTENT_KEY];
         return {
             ...item,
-            frontMatter: yamlFront.loadFront(item.contents)
+            extra: frontMatter,
+            content: content
         };
     });
 }

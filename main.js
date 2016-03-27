@@ -10,7 +10,7 @@ readContent('./content').catch((err) => {
     console.log(err);    
 }).then(handleFrontMatter).then((result) => {
 
-    console.log(result);
+    console.log(result.items);
 
     const DOCTYPE = '<!doctype html>';
     const html = ReactDOMServer.renderToStaticMarkup(
