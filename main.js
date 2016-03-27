@@ -25,4 +25,6 @@ readContent('./content').catch((err) => {
 
     console.log(DOCTYPE);
     console.log(html);
-})
+}).catch((err) => {
+    console.log(err);
+});
