@@ -1,7 +1,7 @@
 export function skipDirectories(item) {
-    return item.isDirectory;
+    return item.isDirectory();
 }
 
 export function skipMeta(item) {
-    return item.path.basename() == 'meta.yaml';
+    return item.getFileName() == 'meta.yaml';
 }

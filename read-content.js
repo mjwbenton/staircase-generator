@@ -1,6 +1,7 @@
 import fsp from 'fs-promise';
 import filepath from 'filepath';
 import Site from './site';
+import ContentItemBuilder from './content-item-builder';
 
 const UTF8 = 'utf8';
 
@@ -16,26 +17,22 @@ function readItems(contents_directory) {
             return fsp.lstat(path.valueOf()).then((info) => {
                 if (info.isDirectory()) {
                     return readItems(path.valueOf()).then((children) => {
-                        const directoryItem = {
-                            path,
-                            isDirectory: info.isDirectory(),
-                            children
-                        };
+                        const directoryItem = new ContentItemBuilder(true, path.valueOf())
+                            .withChildren(children)
+                            .build();
                         return [directoryItem].concat(children);
                     });
                 } else {
-                    return fsp.readFile(path.valueOf(), UTF8).then((content) => ({
-                        path,
-                        isDirectory: info.isDirectory(),
-                        content
-                    }));
+                    return fsp.readFile(path.valueOf(), UTF8).then((content) => (
+                        new ContentItemBuilder(false, path.valueOf()).withContent(content).build()
+                    ));
                 }
             });
         }))
     ).then((results) => 
         [].concat.apply([], results)
     ).catch((err) => {
-        console.err(err); 
+        console.log(err); 
         throw err;
     });
 }
