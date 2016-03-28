@@ -3,43 +3,43 @@ import { skipDirectories, skipMeta } from '../../src/transforms/skip-items';
 
 test('skipItems', (t) => {
 
-    t.test('skipDirectories - is directory', (st) => {
-        const item = {
-            isDirectory() {
-                return true;
+    t.test('skipDirectories', (st) => {
+        {
+            const item = {
+                isDirectory() {
+                    return true;
+                }
             }
+            st.ok(skipDirectories(item), "is directory");
         }
-        st.ok(skipDirectories(item));
+        {
+            const item = {
+                isDirectory() {
+                    return false;
+                }
+            }
+            st.notOk(skipDirectories(item), "isn't directory");
+        }
         st.end();
     });
 
-    t.test('skipDirectories - isn\'t directory', (st) => {
-        const item = {
-            isDirectory() {
-                return false;
+    t.test('skipMeta', (st) => {
+        {
+            const item = {
+                getFileName() {
+                    return 'meta.yaml';
+                }
             }
+            st.ok(skipMeta(item), "is meta");
         }
-        st.notOk(skipDirectories(item));
-        st.end();
-    });
-
-    t.test('skipMeta - is meta', (st) => {
-        const item = {
-            getFileName() {
-                return 'meta.yaml';
+        {
+            const item = {
+                getFileName() {
+                    return 'whatever';
+                }
             }
+            st.notOk(skipMeta(item), "isn't meta");
         }
-        st.ok(skipMeta(item));
-        st.end();
-    });
-
-    t.test('skipMeta - isn\'t meta', (st) => {
-        const item = {
-            getFileName() {
-                return 'whatever';
-            }
-        }
-        st.notOk(skipMeta(item));
         st.end();
     });
 
