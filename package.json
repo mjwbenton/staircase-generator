@@ -30,7 +30,7 @@
     "tape": "^4.2.0"
   },
   "scripts": {
-    "test": "babel-tape-runner tst/**/*.js | tap-spec"
+    "test": "babel-tape-runner tst/*.js tst/**/*.js | tap-spec"
   },
   "author": "Matt Benton <me@mattbenton.co.uk>",
   "license": "MIT"
