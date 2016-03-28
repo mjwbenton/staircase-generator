@@ -2,3 +2,4 @@ node_modules
 build
 content
 css
+npm-debug.log*

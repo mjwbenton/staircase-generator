@@ -28,6 +28,10 @@ class ContentItem {
         return filepath.create(this.path).basename();
     }
 
+    getExtra() {
+        return this.extra;
+    }
+
     isDirectory() {
         return this._isDirectory;
     }
