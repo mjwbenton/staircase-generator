@@ -15,4 +15,15 @@ export default class Site {
         });
         return new Site(newItems);
     }
+
+    forEachWithFilters(filters, forEach) {
+        this.items.forEach((item) => {
+            const filtered = filters.some((filter) => {
+                return filter(item);
+            });
+            if (!filtered) {
+                forEach(item);
+            }
+        });
+    }
 }

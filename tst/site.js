@@ -10,7 +10,25 @@ test('Site', (t) => {
         }
         {
             const site = new Site([1,2,3,4]).mapWithFilters([(x) => x < 2, (x) => x > 3], (x) => x*2);
-            st.deepEquals(site.items, [1, 4, 6, 4], "map only applies to unfiltered items");
+            st.deepEquals(site.items, [1,4,6,4], "map only applies to unfiltered items");
+        }
+        st.end();
+    });
+
+    t.test('#forEachWithFilters', (st) => {
+        {
+            const result = [];
+            new Site([1,2,3,4]).forEachWithFilters([], (x) => {
+                result.push(x); 
+            });
+            st.deepEquals(result, [1,2,3,4], "for each applies to all items with no filters");
+        }
+        {
+            const result = [];
+            new Site([1,2,3,4]).forEachWithFilters([(x) => x < 2, (x) => x > 3], (x) => {
+                result.push(x); 
+            });
+            st.deepEquals(result, [2,3], "for each applies to all items with no filters");
         }
         st.end();
     });
