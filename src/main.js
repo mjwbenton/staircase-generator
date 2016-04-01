@@ -4,7 +4,7 @@ import wrapReact from './transforms/wrap-react';
 import readContent from './read-content';
 import writeContent from './write-content';
 
-readContent('./content').catch((err) =>  console.log(err))
+readContent('./content').catch((err) =>  console.error(err))
     .then(handleFrontMatter)
     .then(handleMarkdown)
     .then(wrapReact)
@@ -12,5 +12,5 @@ readContent('./content').catch((err) =>  console.log(err))
     .then((result) => {
         console.log(result.items);
     }).catch((err) => {
-        console.log(err);
+        console.error(err);
     });
