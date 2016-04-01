@@ -24,6 +24,10 @@ class ContentItem {
         return this.content;
     }
 
+    getFilePath() {
+        return this.path;
+    }
+
     getFileName() {
         return filepath.create(this.path).basename();
     }
