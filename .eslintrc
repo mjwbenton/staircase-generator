@@ -14,7 +14,8 @@
     },
 
     plugins: [
-        'react'
+        'react',
+        'flowtype'
     ],
 
     // See http://eslint.org/docs/rules/
@@ -169,8 +170,6 @@
         'comma-spacing': 2,
         // Must return the same type for all return statements from a function
         'consistent-return': 2,
-        // Must have a newline at end of file
-        'eol-last': 2,
         // Put no space between a key and the colon, and one space afterwards
         'key-spacing': [2, { 'beforeColon': false, 'afterColon': true }],
         // Classes have to start with a capital letter
@@ -206,6 +205,13 @@
 
         // ========== React ==========
         // Make the existence of JSX within a file ensure 'React' counts as a used variable.
-        'react/jsx-uses-react': 1
-    }
+        'react/jsx-uses-react': 1,
+
+        // ========== Flowtype ==========
+        'flowtype/require-parameter-type': 1,
+        'flowtype/require-return-type': [1, 'always', { 'annotateUndefined': 'never' }],
+        'flowtype/space-after-type-colon': [1,'always'],
+        'flowtype/space-before-type-colon': [1, 'always'],
+        'flowtype/type-id-match': [1, '^([A-Z][a-z0-9]+)+Type$']
+    },
 }
