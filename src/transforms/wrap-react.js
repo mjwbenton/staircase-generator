@@ -7,7 +7,7 @@ import { skipMeta, skipDirectories } from './skip-items';
 export default function wrapReact(site) {
     return site.mapWithFilters([skipMeta, skipDirectories], (item) => {
         const DOCTYPE = '<!doctype html>';
-        const html = DOCTYPE + "\n" + ReactDOMServer.renderToStaticMarkup(
+        const html = DOCTYPE + '\n' + ReactDOMServer.renderToStaticMarkup(
             <html>
                 <HtmlHeader />
                 <body>

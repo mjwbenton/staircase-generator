@@ -1,28 +1,31 @@
+/* @flow */
+
 import { skipMeta } from './transforms/skip-items';
 import fs from 'fs';
 import filepath from 'filepath';
+import type Site from './site';
 
-export default function writeContent(output_dir) {
-    return (site) => {
-        const output_path = filepath.create(output_dir);
-        createDir(output_path.valueOf());
+export default function writeContent(outputDir: string) {
+    return (site : Site) => {
+        const outputPath = filepath.create(outputDir);
+        createDir(outputPath.valueOf());
         site.forEachWithFilters([skipMeta], (item) => {
-            const out_file = output_path.append(item.getFilePath()).valueOf();
+            const outFile : string = outputPath.append(item.getFilePath()).valueOf();
             if (item.isDirectory()) {
-                createDir(out_file);
+                createDir(outFile);
             } else {
-                fs.writeFileSync(out_file, item.getContent());
+                fs.writeFileSync(outFile, item.getContent());
             }
         });
-       return site;
-    }
+        return site;
+    };
 }
 
-function createDir(path) {
+function createDir(path: string) {
     try {
         fs.mkdirSync(path);
-    } catch(err) {
-        if (err.code != 'EEXIST') {
+    } catch (err) {
+        if (err.code !== 'EEXIST') {
             throw err;
         }
     }

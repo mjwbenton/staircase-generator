@@ -4,13 +4,16 @@
     extends: "eslint:recommended",
 
     env: {
-        browser: true,
-        node: true
+        node: true,
+        es6: true
     },
 
-    ecmaFeatures: {
-        jsx: true,
-        modules: true
+    parserOptions: {
+      ecmaVersion: 6,
+      sourceType: "module",
+      ecmaFeatures: {
+        jsx: true
+      }
     },
 
     plugins: [
@@ -18,196 +21,98 @@
         'flowtype'
     ],
 
-    // See http://eslint.org/docs/rules/
     rules: {
-
-        // ========== Possible Errors ==========
-        // Ensures jsdoc-style comments are valid
+        'no-console': 0,
         'valid-jsdoc': [2, {
             requireReturn: false,
             prefer: {
                 return: "returns"
             }
         }],
-        // Ensure two unrelated consecutive lines are not accidentally interpreted as a single expression
         'no-unexpected-multiline': 2,
         'no-extra-parens': [2, 'functions'],
-
-        // ========== Best Practices ==========
-        // Don't allow alerts
         'no-alert': 2,
-        // When split across lines, dots are attached to properties rather than objects
         'dot-location': [2, 'property'],
-        // Treat function parameters as constant
         'no-param-reassign': 2,
-        // Disallow comparisons where both sides are exactly the same.
         'no-self-compare': 2,
-        // Disallow the void operator.
         'no-void': 2,
-        // Disallow access to arguments.caller or arguments.callee
         'no-caller': 2,
-        // Use labels only for breaking out of loops
-        'no-empty-label': 2,
-        // Don't use eval
+        'no-extra-label': 1,
+        'no-unused-labels': 1,
         'no-eval': 2,
-        // Don't allow adding functionality to native prototypes
         'no-extend-native': 2,
-        // Don't implicity allow evaling of strings via functions that support such functionality
         'no-implied-eval': 2,
-        // Don't allow use of __iterator__
         'no-iterator': 2,
-        // No pointless blocks
         'no-lone-blocks': 2,
-        // Don't make functions in loops
         'no-loop-func': 2,
-        // Don't use multiple spaces except for
         'no-multi-spaces': 2,
-        // Don't use multiline string style not supported by all browsers
         'no-multi-str': 2,
-        // Don't override native objects
         'no-native-reassign': 2,
-        // Don't use constructors for side effects - the result should be stored somewhere
         'no-new': 2,
-        // Don't make functions using the function constructor
         'no-new-func': 2,
-        // Don't make objects using the object constructor
         'no-new-object': 2,
-        // Don't use constructors to create primitive values (e.g. strings or booleans)
         'no-new-wrappers': 2,
-        // Don't put octal code points into strings - use hex or unicode instead if neccessarry
         'no-octal-escape': 2,
-        // Don't use __proto__ when getPrototypeOf is available
         'no-proto': 2,
-        // Don't allow you to return the evaluation of an assignment
         'no-return-assign': 2,
-        // No eval via creating URLs containing javascript
         'no-script-url':2,
-        // Don't write expressions without storing the result
         'no-unused-expressions': 2,
-        // Don't allow the use of with
         'no-with': 2,
-        // Always require curly braces
         'curly': [2, 'all'],
-        // Use dot notation to access members except when non-constant member wanted
         'dot-notation': [2, { 'allowKeywords': true}],
-        // Use triple equals to compare objects
         'eqeqeq': 2,
-        // No yoda conditionals
         'yoda': [2, 'never'],
-        // Only allow implicit type coercion to booleans
         'no-implicit-coercion': [2, {'boolean': false, 'number': true, 'string': true}],
-        // Don't use call or apply when you don't need to
         'no-useless-call': 2,
-
-        // ========== Strict ==========
-        // Disallow 'use strict';. It is enabled implicitly in ES6.
         strict: [2, 'never'],
-
-        // ========== Variables ==========
-        // No shadows in catches
         'no-catch-shadow': 2,
-        // Disallow unused variables, except as function parameters.
         'no-unused-vars': [2, {vars: 'all', args: 'none'}],
-        // Variables cannot be used before they're defined, but functions can.
         'no-use-before-define': [2, 'nofunc'],
-        // Disallow use of labels which shadow variable names
         'no-label-var': 2,
-        // No shadowing an outer scoped variable by creating a variable with the same name in an inner scope
         'no-shadow': 2,
-        // Don't create variables with the same name as restricted keywords
         'no-shadow-restricted-names': 2,
-        // Don't explicitly define variables as undefined
         'no-undef-init': 2,
-
-        // ========== Stylistic Issues ==========
-        // IMDb standard brace style.
         'brace-style': [2, '1tbs'],
-        // Multi-line comma separated lists have the commas at the ends of lines.
         'comma-style': [2, 'last'],
-        // No spaces inside computed properties.
         'computed-property-spacing': [2, 'never'],
-        // When storing 'this' the variable should always be called 'self'.
         'consistent-this': [2, 'self'],
-        // Files always end in a new line.
         'eol-last': 2,
-        // Always use function declarations rather than assigning anonymous functions to a variable.
         'func-style': [2, 'declaration', { 'allowArrowFunctions': true}],
-        // IMDb standard 4-space indentation.
         indent: 2,
-        // Always use unix line breaks.
         'linebreak-style': [2, 'unix'],
-        // Ternary operator cannot be nested.
         'no-nested-ternary': 2,
-        // Every 'let' or 'const' declares one variable.
         'one-var': [2, 'never'],
-        // Multi-line operator separated lists put the operators at the beginning of the line.
         'operator-linebreak': [2, 'before'],
-        // Properties should only be quoted when they contain a character that requires them to be.
         'quote-props': [2, 'as-needed'],
-        // Always use single quotes.
         quotes: [2, 'single'],
-        // Semi-colons should always be preceded by a space.
         'semi-spacing': [2, {before: false, after: true}],
-        // Require semi-colons at the end of statements>
         semi: [2, 'always'],
-        // Require a space after certain keywords, e.g. if.
-        'space-after-keywords': [2, 'always'],
-        // Require a space before the opening brace of a block.
+        'keyword-spacing': 1,
         'space-before-blocks': [2, 'always'],
-        // Disallow a space between the function name and the opening parenthesis.
         'space-before-function-paren': [2, 'never'],
-        // No spaces after an open parenthesis or before a close parenthesis
         'space-in-parens': [2, 'never'],
-        // Use literals instead of array contructors
         'no-array-constructor': 2,
-        // No space between the function name and the opening paren
         'no-spaced-func': 2,
-        // No extra spaces at the end of lines
         'no-trailing-spaces': 2,
-        // Variables should have camelcase names
         'camelcase': 2,
-        // No comma before a space
         'comma-spacing': 2,
-        // Must return the same type for all return statements from a function
         'consistent-return': 2,
-        // Put no space between a key and the colon, and one space afterwards
         'key-spacing': [2, { 'beforeColon': false, 'afterColon': true }],
-        // Classes have to start with a capital letter
         'new-cap': 2,
-        // Must use parens when instantiating a class with new
         'new-parens': 2,
-        // Must puts spaces around infix operators (e.g. +)
         'space-infix-ops': 2,
-        // Require spaces around return, throw and case keywords
-        'space-return-throw-case': 2,
-        // Spaces after unary operators only when that operator is a word, e.g. ('new', but not '-')
         'space-unary-ops': [2, { 'words': true, 'nonwords': false }],
-
-        // ========== ES6 Specific ==========
-        // All constructors for classes which extend another class must call super().
         'constructor-super': 2,
-        // All constructors for classes which extend another class must call super() before referencing this.
         'no-this-before-super': 2,
-        // Disallow the var keyword. Prefer const or let.
         'no-var': 2,
-        // When defining a method on an object you must use the shorthand form.
         'object-shorthand': [2, 'methods'],
-        // Any variable that could validly be defined with const rather than let must be.
         'prefer-const': 2,
-        // Must put a space before and after the arrow when using arrow functions
         'arrow-spacing': 2,
-        // Don't reassign local references to classes
         'no-class-assign': 2,
-        // Have linting inform you if you're reassigning a constant (rather than it just failing at runtime)
         'no-const-assign': 2,
-        // Generator functions must have a yield statement
         'require-yield': 2,
-
-        // ========== React ==========
-        // Make the existence of JSX within a file ensure 'React' counts as a used variable.
         'react/jsx-uses-react': 1,
-
-        // ========== Flowtype ==========
+        'react/jsx-uses-vars': 1,
         'flowtype/require-parameter-type': 1,
         'flowtype/require-return-type': [1, 'always', { 'annotateUndefined': 'never' }],
         'flowtype/space-after-type-colon': [1,'always'],

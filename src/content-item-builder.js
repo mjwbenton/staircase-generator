@@ -1,4 +1,4 @@
-import Immutable from 'seamless-immutable';
+import immutable from 'seamless-immutable';
 import filepath from 'filepath';
 
 class ContentItem {
@@ -12,12 +12,12 @@ class ContentItem {
     }
 
     withContent(newContent) {
-        return this.set("content", newContent);
+        return this.set('content', newContent);
     }
 
     withMergedExtra(additionalExtra) {
         const newExtra = this.extra.merge(additionalExtra);
-        return this.set("extra", newExtra);
+        return this.set('extra', newExtra);
     }
 
     getContent() {
@@ -47,7 +47,7 @@ export default class Builder {
         this._isDirectory = isDirectory;
         this._path = path;
         this._children = [];
-        this._content = "";
+        this._content = '';
         this._extra = {};
     }
 
@@ -67,7 +67,7 @@ export default class Builder {
     }
 
     build() {
-        return Immutable(new ContentItem(this), { prototype: ContentItem.prototype, deep: false });
+        return immutable(new ContentItem(this), { prototype: ContentItem.prototype, deep: false });
     }
 
 }

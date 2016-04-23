@@ -3,5 +3,5 @@ export function skipDirectories(item) {
 }
 
 export function skipMeta(item) {
-    return item.getFileName() == 'meta.yaml';
+    return item.getFileName() === 'meta.yaml';
 }
