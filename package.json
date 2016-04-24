@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^6.0.3",
+    "babel-plugin-transform-class-properties": "^6.6.0",
     "babel-plugin-transform-flow-strip-types": "^6.7.0",
     "babel-tape-runner": "^2.0.1",
     "blue-tape": "^0.2.0",

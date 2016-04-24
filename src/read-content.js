@@ -1,15 +1,19 @@
+/* @flow */
+
 import fsp from 'fs-promise';
 import filepath from 'filepath';
 import Site from './site';
 import ContentItemBuilder from './content-item-builder';
+import type { ContentItem } from './content-item-builder';
 
 const UTF8 = 'utf8';
 
-export default function readContents(rootDirectory) {
+export default function readContents(rootDirectory : string) : Promise<Site> {
     return readItems(rootDirectory, rootDirectory).then((items) => new Site(items));
 }
 
-function readItems(rootDirectory, currentDirectory) {
+function readItems(rootDirectory : string,
+                   currentDirectory : string) : Promise<ContentItem[]> {
     const currentPath = filepath.create(currentDirectory);
     return fsp.readdir(currentPath.valueOf()).then((files) =>
         Promise.all(files.map((file) => {

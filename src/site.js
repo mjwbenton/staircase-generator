@@ -1,9 +1,17 @@
-export default class Site {
-    constructor(items) {
+/* @flow */
+
+import type { ContentItem } from './content-item-builder';
+
+class Site {
+    items : ContentItem[];
+
+    constructor(items : ContentItem[]) {
         this.items = items;
     }
 
-    mapWithFilters(filters, map) {
+    mapWithFilters(
+            filters : Array<(item : ContentItem) => bool>,
+            map : (item : ContentItem) => ContentItem) : Site {
         const newItems = this.items.map((item) => {
             const filtered = filters.some((filter) => {
                 return filter(item);
@@ -16,7 +24,8 @@ export default class Site {
         return new Site(newItems);
     }
 
-    forEachWithFilters(filters, forEach) {
+    forEachWithFilters(filters : Array<(item : ContentItem) => bool>,
+            forEach : (item : ContentItem) => void) {
         this.items.forEach((item) => {
             const filtered = filters.some((filter) => {
                 return filter(item);
@@ -27,3 +36,5 @@ export default class Site {
         });
     }
 }
+
+export default Site;

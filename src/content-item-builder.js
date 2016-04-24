@@ -1,9 +1,18 @@
+/* @flow */
+
 import immutable from 'seamless-immutable';
 import filepath from 'filepath';
 
-class ContentItem {
+export class ContentItem {
+    _isDirectory : boolean;
+    path : string;
+    children : ContentItem[];
+    content : string;
+    extra : any;
+    // Set method actually from seamless-immutable
+    set : (key : string, val : any) => ContentItem;
 
-    constructor(builder) {
+    constructor(builder : Builder) {
         this._isDirectory = builder._isDirectory;
         this.path = builder._path;
         this.children = builder._children;
@@ -11,39 +20,44 @@ class ContentItem {
         this.extra = builder._extra;
     }
 
-    withContent(newContent) {
+    withContent(newContent : string) : ContentItem {
         return this.set('content', newContent);
     }
 
-    withMergedExtra(additionalExtra) {
+    withMergedExtra(additionalExtra : any) : ContentItem {
         const newExtra = this.extra.merge(additionalExtra);
         return this.set('extra', newExtra);
     }
 
-    getContent() {
+    getContent() : string {
         return this.content;
     }
 
-    getFilePath() {
+    getFilePath() : string {
         return this.path;
     }
 
-    getFileName() {
+    getFileName() : string {
         return filepath.create(this.path).basename();
     }
 
-    getExtra() {
+    getExtra() : any {
         return this.extra;
     }
 
-    isDirectory() {
+    isDirectory() : boolean {
         return this._isDirectory;
     }
 }
 
 export default class Builder {
+    _isDirectory : boolean;
+    _path : string;
+    _children : ContentItem[];
+    _content : string;
+    _extra : any;
 
-    constructor(isDirectory, path) {
+    constructor(isDirectory : boolean, path : string) {
         this._isDirectory = isDirectory;
         this._path = path;
         this._children = [];
@@ -51,22 +65,22 @@ export default class Builder {
         this._extra = {};
     }
 
-    withChildren(children) {
+    withChildren(children : ContentItem[]) : Builder {
         this._children = children;
         return this;
     }
 
-    withContent(content) {
+    withContent(content : string) : Builder {
         this._content = content;
         return this;
     }
 
-    withExtra(extra) {
+    withExtra(extra : any) : Builder {
         this._extra = extra;
         return this;
     }
 
-    build() {
+    build() : ContentItem {
         return immutable(new ContentItem(this), { prototype: ContentItem.prototype, deep: false });
     }
 

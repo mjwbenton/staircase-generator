@@ -3,3 +3,4 @@
 .*/node_modules/react/react.js
 .*/node_modules/react/lib/React.js
 .*/node_modules/react/lib/ReactDOM.js
+.*/node_modules/.*/test.*

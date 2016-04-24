@@ -1,10 +1,14 @@
+/* @flow */
+
+import type Site from '../site';
+
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 
 import HtmlHeader from '../components/HtmlHeader';
 import { skipMeta, skipDirectories } from './skip-items';
 
-export default function wrapReact(site) {
+export default function wrapReact(site : Site) : Site {
     return site.mapWithFilters([skipMeta, skipDirectories], (item) => {
         const DOCTYPE = '<!doctype html>';
         const html = DOCTYPE + '\n' + ReactDOMServer.renderToStaticMarkup(

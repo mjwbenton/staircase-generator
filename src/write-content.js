@@ -5,8 +5,8 @@ import fs from 'fs';
 import filepath from 'filepath';
 import type Site from './site';
 
-export default function writeContent(outputDir: string) {
-    return (site : Site) => {
+export default function writeContent(outputDir: string) : (site : Site) => Site {
+    return (site) => {
         const outputPath = filepath.create(outputDir);
         createDir(outputPath.valueOf());
         site.forEachWithFilters([skipMeta], (item) => {
