@@ -9,7 +9,7 @@ const handleFrontMatter = proxyquire('../../src/transforms/handle-front-matter',
             return {
                 some: 'stuff',
                 __content: 'the content'
-            }
+            };
         }
     }
 }).default;
@@ -17,8 +17,8 @@ const handleFrontMatter = proxyquire('../../src/transforms/handle-front-matter',
 test('handleFrontMatter', (t) => {
     const item = new ContentItemBuilder(false, '/whatever.html').build();
     const site = new Site([item]);
-    const newSite = handleFrontMatter(site)
-    t.equals(newSite.items[0].getContent(), "the content", "content without front matter");
-    t.equals(newSite.items[0].getExtra().some, "stuff", "front matter added to extras");
+    const newSite = handleFrontMatter(site);
+    t.equals(newSite.items[0].getContent(), 'the content', 'content without front matter');
+    t.equals(newSite.items[0].getExtra().some, 'stuff', 'front matter added to extras');
     t.end();
 });

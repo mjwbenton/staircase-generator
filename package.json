@@ -36,8 +36,8 @@
   "scripts": {
     "test": "babel-tape-runner tst/*.js tst/**/*.js | tap-spec",
     "flow": "flow; test $? -eq 0 -o $? -eq 2",
-    "lint": "eslint src",
-    "lint-fix": "eslint --fix src"
+    "lint": "eslint src tst",
+    "lint-fix": "eslint --fix src tst"
   },
   "author": "Matt Benton <me@mattbenton.co.uk>",
   "license": "MIT"

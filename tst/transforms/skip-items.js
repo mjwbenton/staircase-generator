@@ -9,16 +9,16 @@ test('skipItems', (t) => {
                 isDirectory() {
                     return true;
                 }
-            }
-            st.ok(skipDirectories(item), "is directory");
+            };
+            st.ok(skipDirectories(item), 'is directory');
         }
         {
             const item = {
                 isDirectory() {
                     return false;
                 }
-            }
-            st.notOk(skipDirectories(item), "isn't directory");
+            };
+            st.notOk(skipDirectories(item), 'isn\'t directory');
         }
         st.end();
     });
@@ -29,16 +29,16 @@ test('skipItems', (t) => {
                 getFileName() {
                     return 'meta.yaml';
                 }
-            }
-            st.ok(skipMeta(item), "is meta");
+            };
+            st.ok(skipMeta(item), 'is meta');
         }
         {
             const item = {
                 getFileName() {
                     return 'whatever';
                 }
-            }
-            st.notOk(skipMeta(item), "isn't meta");
+            };
+            st.notOk(skipMeta(item), 'isn\'t meta');
         }
         st.end();
     });
