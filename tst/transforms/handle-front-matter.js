@@ -1,3 +1,5 @@
+/* @flow */
+
 import proxyquire from 'proxyquire';
 import test from 'tape';
 import Site from '../../src/site';

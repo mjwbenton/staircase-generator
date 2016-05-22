@@ -1,3 +1,5 @@
+/* @flow */
+
 import test from 'tape';
 import ContentItemBuilder from '../src/content-item-builder';
 
