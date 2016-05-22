@@ -37,6 +37,7 @@
         'key-spacing': [2, { 'beforeColon': false, 'afterColon': true }],
         'keyword-spacing': 1,
         'linebreak-style': [2, 'unix'],
+        'max-len' : ['error', 80],
         'new-cap': 2,
         'new-parens': 2,
         'no-alert': 2,

@@ -23,7 +23,8 @@ test('ContentItem', (t) => {
             .build();
         st.deepEquals(item.getExtra(), initialExtra, 'correct initial extras');
         item = item.withMergedExtra(newExtra);
-        st.deepEquals(item.getExtra(), { ...initialExtra, ...newExtra }, 'correct merged extras');
+        st.deepEquals(item.getExtra(), { ...initialExtra, ...newExtra },
+                'correct merged extras');
         st.end();
     });
 

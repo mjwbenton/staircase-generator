@@ -9,7 +9,8 @@ import type { ContentItem } from './content-item-builder';
 const UTF8 = 'utf8';
 
 export default function readContents(rootDirectory : string) : Promise<Site> {
-    return readItems(rootDirectory, rootDirectory).then((items) => new Site(items));
+    return readItems(rootDirectory, rootDirectory)
+        .then((items) => new Site(items));
 }
 
 function readItems(rootDirectory : string,
@@ -18,19 +19,24 @@ function readItems(rootDirectory : string,
     return fsp.readdir(currentPath.valueOf()).then((files) =>
         Promise.all(files.map((file) => {
             const path = currentPath.append(file);
-            const relativePath = filepath.create(rootDirectory).relative(path.valueOf());
+            const relativePath = filepath.create(rootDirectory)
+                .relative(path.valueOf());
             return fsp.lstat(path.valueOf()).then((info) => {
                 if (info.isDirectory()) {
-                    return readItems(rootDirectory, path.valueOf()).then((children) => {
-                        const directoryItem = new ContentItemBuilder(true, relativePath)
-                            .withChildren(children)
-                            .build();
-                        return [directoryItem].concat(children);
-                    });
+                    return readItems(rootDirectory, path.valueOf())
+                        .then((children) => {
+                            const directoryItem = new ContentItemBuilder(
+                                    true, relativePath)
+                                .withChildren(children)
+                                .build();
+                            return [directoryItem].concat(children);
+                        });
                 } else {
-                    return fsp.readFile(path.valueOf(), UTF8).then((content) => (
-                        new ContentItemBuilder(false, relativePath).withContent(content).build()
-                    ));
+                    return fsp.readFile(path.valueOf(), UTF8)
+                        .then((content) => (
+                            new ContentItemBuilder(false, relativePath)
+                                .withContent(content).build()
+                        ));
                 }
             });
         }))

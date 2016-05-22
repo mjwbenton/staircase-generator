@@ -81,7 +81,8 @@ export default class Builder {
     }
 
     build() : ContentItem {
-        return immutable(new ContentItem(this), { prototype: ContentItem.prototype, deep: false });
+        return immutable(new ContentItem(this),
+            { prototype: ContentItem.prototype, deep: false });
     }
 
 }
