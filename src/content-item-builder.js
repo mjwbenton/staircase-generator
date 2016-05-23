@@ -1,71 +1,84 @@
 /* @flow */
 
-import immutable from 'seamless-immutable';
 import filepath from 'filepath';
+import Site from './site';
 
 export class ContentItem {
     _isDirectory : boolean;
-    path : string;
-    children : ContentItem[];
-    content : string;
-    extra : any;
-    // Set method actually from seamless-immutable
-    set : (key : string, val : any) => ContentItem;
+    _path : string;
+    _children : Site;
+    _content : string;
+    _extra : any;
 
     constructor(builder : Builder) {
         this._isDirectory = builder._isDirectory;
-        this.path = builder._path;
-        this.children = builder._children;
-        this.content = builder._content;
-        this.extra = builder._extra;
+        this._path = builder._path;
+        this._children = builder._children;
+        this._content = builder._content;
+        this._extra = builder._extra;
     }
 
     withContent(newContent : string) : ContentItem {
-        return this.set('content', newContent);
+        return this._toBuilder().withContent(newContent).build();
     }
 
     withMergedExtra(additionalExtra : any) : ContentItem {
-        const newExtra = this.extra.merge(additionalExtra);
-        return this.set('extra', newExtra);
+        const newExtra = Object.assign({}, this._extra, additionalExtra);
+        return this._toBuilder().withExtra(newExtra).build();
+    }
+
+    withChildren(children : Site) : ContentItem {
+        return this._toBuilder().withChildren(children).build();
     }
 
     getContent() : string {
-        return this.content;
+        return this._content;
     }
 
     getFilePath() : string {
-        return this.path;
+        return this._path;
     }
 
     getFileName() : string {
-        return filepath.create(this.path).basename();
+        return filepath.create(this._path).basename();
     }
 
     getExtra() : any {
-        return this.extra;
+        return this._extra;
+    }
+
+    getChildren() : Site {
+        return this._children;
     }
 
     isDirectory() : boolean {
         return this._isDirectory;
+    }
+
+    _toBuilder() : Builder {
+        return new Builder(this._isDirectory, this._path)
+            .withContent(this._content)
+            .withChildren(this._children)
+            .withExtra(this._extra);
     }
 }
 
 export default class Builder {
     _isDirectory : boolean;
     _path : string;
-    _children : ContentItem[];
+    _children : Site;
     _content : string;
     _extra : any;
 
     constructor(isDirectory : boolean, path : string) {
         this._isDirectory = isDirectory;
         this._path = path;
-        this._children = [];
+        this._children = new Site([]);
         this._content = '';
         this._extra = {};
     }
 
-    withChildren(children : ContentItem[]) : Builder {
+    withChildren(children : Site) : Builder {
         this._children = children;
         return this;
     }
@@ -81,8 +94,7 @@ export default class Builder {
     }
 
     build() : ContentItem {
-        return immutable(new ContentItem(this),
-            { prototype: ContentItem.prototype, deep: false });
+        return new ContentItem(this);
     }
 
 }

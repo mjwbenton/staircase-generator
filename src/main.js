@@ -3,10 +3,10 @@
 import handleFrontMatter from './transforms/handle-front-matter';
 import handleMarkdown from './transforms/handle-markdown';
 import wrapReact from './transforms/wrap-react';
-import readContent from './read-content';
 import writeContent from './write-content';
+import { readSiteFromPath } from './site';
 
-readContent('./content').catch((err) => console.error(err))
+readSiteFromPath('./content').catch((err) => console.trace(err))
     .then(handleFrontMatter)
     .then(handleMarkdown)
     .then(wrapReact)

@@ -4,3 +4,6 @@
 .*/node_modules/react/lib/React.js
 .*/node_modules/react/lib/ReactDOM.js
 .*/node_modules/.*/test.*
+
+[libs]
+interfaces/

@@ -5,15 +5,12 @@ import ContentItemBuilder from '../src/content-item-builder';
 
 test('ContentItem', (t) => {
 
-    t.test('Constructs immutable item', (st) => {
+    t.test('Constructs item', (st) => {
         const item = new ContentItemBuilder(false, '/this/is/the/path.html')
             .withContent('content')
             .withExtra({ extra: 'stuff' })
             .build();
         st.equals(item.getContent(), 'content', 'correct content');
-        st.throws(() => {
-            item.content = 'boo';
-        }, 'TypeError', 'mutating throws TypeError');
         st.end();
     });
 
