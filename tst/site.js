@@ -12,6 +12,13 @@ function ci(x : number) {
         .build();
 }
 
+function cid(x : number, cis : [ContentItem]) {
+    return new ContentItemBuilder(true, '')
+        .withContent(x.toString())
+        .withChildren(new Site(cis))
+        .build();
+}
+
 function intContent(x : ContentItem) {
     return parseInt(x.getContent());
 }
@@ -39,24 +46,60 @@ test('Site', (t) => {
     });
 
     t.test('#forEachWithFilters', (st) => {
+        const ci1 = ci(1);
+        const ci2 = ci(2);
+        const ci3 = cid(3, [ci1, ci2]);
+        const ci4 = ci(4);
         {
             const result = [];
-            new Site([ci(1), ci(2), ci(3), ci(4)])
-                .forEachWithFilters([], (x) => {
-                    result.push(x);
-                });
-            st.deepEquals(result, [ci(1), ci(2), ci(3), ci(4)],
+            new Site([ci3, ci4]).forEachWithFilters([], (x) => {
+                result.push(x);
+            });
+            st.deepEquals(result, [ci1, ci2, ci3, ci4],
                     'for each applies to all items with no filters');
         }
         {
             const result = [];
-            new Site([ci(1), ci(2), ci(3), ci(4)]).forEachWithFilters(
+            new Site([ci3, ci4]).forEachWithFilters(
+                [(x) => intContent(x) < 2, (x) => intContent(x) > 3],
+                (x) => {
+                    result.push(x);
+                });
+            st.deepEquals(result, [ci2, ci3],
+                    'for each applies to unfiltered items with filters');
+        }
+        st.end();
+    });
+
+    t.test('#forEachWithFiltersTopLevel', (st) => {
+        {
+            const input = [ci(1), ci(2), cid(3, [ci(4)])];
+            const result = [];
+            new Site(input).forEachWithFiltersTopLevel([], (x) => {
+                result.push(x);
+            });
+            st.deepEquals(result, input,
+                    'for each applies to all items with no filters');
+        }
+        {
+            const result = [];
+            new Site([ci(1), ci(2), ci(3), ci(4)]).forEachWithFiltersTopLevel(
                 [(x) => intContent(x) < 2, (x) => intContent(x) > 3], (x) => {
                     result.push(x);
                 });
             st.deepEquals(result, [ci(2), ci(3)],
-                    'for each applies to all items with no filters');
+                    'for each applies to unfiltered items with filters');
         }
+        st.end();
+    });
+
+    t.test('#writeToPath', (st) => {
+        // TODO: Write the test
+        st.end();
+    });
+
+    t.test('readSiteFromPath', (st) => {
+        // TODO: Write the test
         st.end();
     });
 
