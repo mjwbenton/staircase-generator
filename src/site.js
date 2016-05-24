@@ -4,6 +4,8 @@ import fsp from 'fs-promise';
 import filepath from 'filepath';
 import ContentItemBuilder from './content-item-builder';
 import type { ContentItem } from './content-item-builder';
+import { ensureDirExists } from './fsutils';
+import { skipMeta } from './transforms/skip-items';
 
 const UTF8 = 'utf8';
 
@@ -52,6 +54,34 @@ export default class Site {
             if (!filtered) {
                 forEach(item);
             }
+        });
+    }
+
+    forEachWithFiltersTopLevel(
+            filters : Array<(item : ContentItem) => bool>,
+            forEach : (item : ContentItem) => void) {
+        this.items.forEach((item) => {
+            const filtered = filters.some((filter) => {
+                return filter(item);
+            });
+            if (!filtered) {
+                forEach(item);
+            }
+        });
+    }
+
+    writeToPath(outputDir : string) : Promise<void> {
+        const outputPath = filepath.create(outputDir);
+        return ensureDirExists(outputPath.valueOf()).then(() => {
+            this.forEachWithFiltersTopLevel([skipMeta], (item) => {
+                if (item.isDirectory()) {
+                    item.getChildren().writeToPath(outputDir);
+                } else {
+                    const itemPath = outputPath.append(item.getFilePath())
+                            .valueOf();
+                    fsp.writeFile(itemPath, item.getContent());
+                }
+            });
         });
     }
 }
