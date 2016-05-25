@@ -16,6 +16,10 @@ export default class Site {
         this.items = items;
     }
 
+    getNthContentItem(n : number) : ContentItem {
+        return this.items[n];
+    }
+
     mapWithFilters(
             filters : Array<(item : ContentItem) => bool>,
             map : (item : ContentItem) => ContentItem) : Site {

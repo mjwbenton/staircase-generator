@@ -31,6 +31,10 @@ export class ContentItem {
         return this._toBuilder().withChildren(children).build();
     }
 
+    withPath(path : string) : ContentItem {
+        return this._toBuilder().withPath(path).build();
+    }
+
     getContent() : string {
         return this._content;
     }
@@ -76,6 +80,11 @@ export default class Builder {
         this._children = new Site([]);
         this._content = '';
         this._extra = {};
+    }
+
+    withPath(path : string) : Builder {
+        this._path = path;
+        return this;
     }
 
     withChildren(children : Site) : Builder {

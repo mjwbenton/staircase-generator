@@ -1,21 +1,37 @@
 /* @flow */
 
-import test from 'tape';
-import Site from '../src/site';
+import test from 'blue-tape';
+import proxyquire from 'proxyquire';
+import sinon from 'sinon';
 
 import ContentItemBuilder from '../src/content-item-builder';
 import type { ContentItem } from '../src/content-item-builder';
 
+const writeFileSpy = sinon.spy();
+const Site = proxyquire('../src/site', {
+    'fs-promise': {
+        writeFile: writeFileSpy
+    },
+    './fsutils': {
+        ensureDirExists() {
+            return Promise.resolve();
+        }
+    },
+    '@noCallThru': true
+}).default;
+
 function ci(x : number) {
-    return new ContentItemBuilder(false, '')
+    return new ContentItemBuilder(false, `${x}`)
         .withContent(x.toString())
         .build();
 }
 
 function cid(x : number, cis : [ContentItem]) {
+    const itemsInDirectory = cis.map(
+            (i) => i.withPath(`${x}/${i.getFilePath()}`));
     return new ContentItemBuilder(true, '')
         .withContent(x.toString())
-        .withChildren(new Site(cis))
+        .withChildren(new Site(itemsInDirectory))
         .build();
 }
 
@@ -46,9 +62,9 @@ test('Site', (t) => {
     });
 
     t.test('#forEachWithFilters', (st) => {
-        const ci1 = ci(1);
-        const ci2 = ci(2);
-        const ci3 = cid(3, [ci1, ci2]);
+        const ci3 = cid(3, [ci(1), ci(2)]);
+        const ci1 = ci3.getChildren().getNthContentItem(0);
+        const ci2 = ci3.getChildren().getNthContentItem(1);
         const ci4 = ci(4);
         {
             const result = [];
@@ -94,8 +110,12 @@ test('Site', (t) => {
     });
 
     t.test('#writeToPath', (st) => {
-        // TODO: Write the test
-        st.end();
+        const site = new Site([ci(1), cid(4, [ci(2), ci(3)])]);
+        return site.writeToPath('/').then(() => {
+            st.assert(writeFileSpy.calledWith('/1', '1'), 'file 1');
+            st.assert(writeFileSpy.calledWith('/4/2', '2'), 'file 2');
+            st.assert(writeFileSpy.calledWith('/4/3', '3'), 'file 3');
+        });
     });
 
     t.test('readSiteFromPath', (st) => {
