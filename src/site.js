@@ -9,7 +9,7 @@ import { skipMeta } from './transforms/skip-items';
 
 const UTF8 = 'utf8';
 
-export default class Site {
+export class Site {
     items : ContentItem[];
 
     constructor(items : ContentItem[]) {
@@ -134,3 +134,5 @@ function createFileContentItemForPath(rootDirectory, relativePath)
             .withContent(content).build()
     ));
 }
+
+export default Site;

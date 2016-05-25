@@ -7,10 +7,17 @@ import sinon from 'sinon';
 import ContentItemBuilder from '../src/content-item-builder';
 import type { ContentItem } from '../src/content-item-builder';
 
-const writeFileSpy = sinon.spy();
-const Site = proxyquire('../src/site', {
+const writeFileStub = sinon.stub();
+const readdirStub = sinon.stub();
+const lstatStub = sinon.stub();
+const { Site, readSiteFromPath } = proxyquire('../src/site', {
     'fs-promise': {
-        writeFile: writeFileSpy
+        writeFile: writeFileStub,
+        readdir: readdirStub,
+        lstat: lstatStub,
+        readFile(file, encoding) {
+            return Promise.resolve(file);
+        }
     },
     './fsutils': {
         ensureDirExists() {
@@ -18,7 +25,7 @@ const Site = proxyquire('../src/site', {
         }
     },
     '@noCallThru': true
-}).default;
+});
 
 function ci(x : number) {
     return new ContentItemBuilder(false, `${x}`)
@@ -112,15 +119,31 @@ test('Site', (t) => {
     t.test('#writeToPath', (st) => {
         const site = new Site([ci(1), cid(4, [ci(2), ci(3)])]);
         return site.writeToPath('/').then(() => {
-            st.assert(writeFileSpy.calledWith('/1', '1'), 'file 1');
-            st.assert(writeFileSpy.calledWith('/4/2', '2'), 'file 2');
-            st.assert(writeFileSpy.calledWith('/4/3', '3'), 'file 3');
+            st.assert(writeFileStub.calledWith('/1', '1'), 'file 1');
+            st.assert(writeFileStub.calledWith('/4/2', '2'), 'file 2');
+            st.assert(writeFileStub.calledWith('/4/3', '3'), 'file 3');
         });
     });
 
     t.test('readSiteFromPath', (st) => {
         // TODO: Write the test
-        st.end();
+        const path = '/a';
+        const files = ['1'];
+        readdirStub.withArgs(path).returns(Promise.resolve(files));
+        lstatStub.returns(Promise.resolve({
+            isDirectory() {
+                return false;
+            }
+        }));
+        return readSiteFromPath(path).then((site) => {
+            const contentItem = site.getNthContentItem(0);
+            st.equals(contentItem.getFilePath(),
+                    '1', 'correct file path');
+            st.equals(contentItem.getFileName(),
+                    '1', 'correct file name');
+            st.false(contentItem.isDirectory(), 'not a directory');
+            st.equals(contentItem.getContent(), '/a/1', 'correct content');
+        });
     });
 
 });
