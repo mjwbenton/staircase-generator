@@ -74,65 +74,61 @@ export class Site {
         });
     }
 
-    writeToPath(outputDir : string) : Promise<void> {
+    async writeToPath(outputDir : string) : Promise<void> {
         const outputPath = filepath.create(outputDir);
-        return ensureDirExists(outputPath.valueOf()).then(() => {
-            this.forEachWithFiltersTopLevel([skipMeta], (item) => {
-                if (item.isDirectory()) {
-                    item.getChildren().writeToPath(outputDir);
-                } else {
-                    const itemPath = outputPath.append(item.getFilePath())
-                            .valueOf();
-                    fsp.writeFile(itemPath, item.getContent());
-                }
-            });
+        await ensureDirExists(outputPath.valueOf());
+        this.forEachWithFiltersTopLevel([skipMeta], (item) => {
+            const itemPath = outputPath.append(item.getFileName())
+                .valueOf();
+            if (item.isDirectory()) {
+                item.getChildren().writeToPath(itemPath);
+            } else {
+                fsp.writeFile(itemPath, item.getContent());
+            }
         });
     }
 }
 
-export function readSiteFromPath(rootDirectory : string) : Promise<Site> {
-    return readSiteFromSubPath(rootDirectory, rootDirectory);
+export async function readSiteFromPath(rootDirectory : string) : Promise<Site> {
+    return await readSiteFromSubPath(rootDirectory, rootDirectory);
 }
 
-function readSiteFromSubPath(rootDirectory : string, currentDirectory: string)
-        : Promise<Site> {
+async function readSiteFromSubPath(
+        rootDirectory : string, currentDirectory: string) : Promise<Site> {
     const currentPath = filepath.create(currentDirectory);
-    return fsp.readdir(currentPath.valueOf()).then((files) =>
-        Promise.all(files.map((file) => {
-            const path = currentPath.append(file);
-            const rootRelativePath = filepath.create(rootDirectory)
-                .relative(path.valueOf());
-            return fsp.lstat(path.valueOf()).then((info) => {
-                if (info.isDirectory()) {
-                    return createDirectoryContentItemFromPath(
-                        rootDirectory, rootRelativePath);
-                } else {
-                    return createFileContentItemForPath(
-                        rootDirectory, rootRelativePath);
-                }
-            });
-        }))
-    ).then((contentItems) => new Site(contentItems));
+    const files = await fsp.readdir(currentPath.valueOf());
+    const contentItems = await Promise.all(files.map(async (file) => {
+        const path = currentPath.append(file);
+        const rootRelativePath = filepath.create(rootDirectory)
+            .relative(path.valueOf());
+        const fileInfo = await fsp.lstat(path.valueOf());
+        if (fileInfo.isDirectory()) {
+            return await createDirectoryContentItemFromPath(
+                rootDirectory, rootRelativePath);
+        } else {
+            return await createFileContentItemForPath(
+                rootDirectory, rootRelativePath);
+        }
+    }));
+    return new Site(contentItems);
 }
 
-function createDirectoryContentItemFromPath(rootDirectory, relativePath)
+async function createDirectoryContentItemFromPath(rootDirectory, relativePath)
         : Promise<ContentItem> {
     const fullPath = filepath.create(rootDirectory)
             .append(relativePath).valueOf();
-    return readSiteFromSubPath(rootDirectory, fullPath).then((subSite) => {
-        return new ContentItemBuilder(true, relativePath)
-            .withChildren(subSite).build();
-    });
+    const subSite = await readSiteFromSubPath(rootDirectory, fullPath);
+    return new ContentItemBuilder(true, relativePath)
+        .withChildren(subSite).build();
 }
 
-function createFileContentItemForPath(rootDirectory, relativePath)
+async function createFileContentItemForPath(rootDirectory, relativePath)
         : Promise<ContentItem> {
     const fullPath = filepath.create(rootDirectory)
             .append(relativePath).valueOf();
-    return fsp.readFile(fullPath, UTF8).then((content) => (
-        new ContentItemBuilder(false, relativePath)
-            .withContent(content).build()
-    ));
+    const content = await fsp.readFile(fullPath, UTF8);
+    return new ContentItemBuilder(false, relativePath)
+        .withContent(content).build();
 }
 
 export default Site;
