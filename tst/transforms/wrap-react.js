@@ -1,18 +1,14 @@
 /* @flow */
 
 import test from 'tape';
-import proxyquire from 'proxyquire';
 import Site from '../../src/site';
 import ContentItemBuilder from '../../src/content-item-builder';
 import React from 'react';
+import wrapReact from '../../src/transforms/wrap-react';
 
-const wrapReact = proxyquire('../../src/transforms/wrap-react', {
-    '../components/Page': {
-        default(props) {
-            return <div>{props.item.getContent()}</div>;
-        }
-    }
-}).default;
+function Component(props) {
+    return <div>{props.item.getContent()}</div>;
+}
 
 test('wrapReact', (t) => {
     const content = 'whatever';
@@ -21,7 +17,7 @@ test('wrapReact', (t) => {
         .withContent(content)
         .build();
     const site = new Site([ci]);
-    const newSite = wrapReact(site);
+    const newSite = wrapReact(Component)(site);
     t.equals(newSite.items[0].getContent(), expectedContent);
     t.end();
 });
