@@ -1,3 +1,5 @@
+/* @flow */
+
 import fsp from 'fs-promise';
 
 export async function ensureDirExists(path : string) : Promise<void> {

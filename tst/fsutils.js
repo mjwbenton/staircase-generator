@@ -1,3 +1,5 @@
+/* @flow */
+
 import test from 'blue-tape';
 import proxyquire from 'proxyquire';
 
