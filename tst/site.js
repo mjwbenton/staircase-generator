@@ -36,7 +36,7 @@ function ci(x : number) {
 function cid(x : number, cis : [ContentItem]) {
     const itemsInDirectory = cis.map(
             (i) => i.withPath(`${x}/${i.getFilePath()}`));
-    return new ContentItemBuilder(true, '')
+    return new ContentItemBuilder(true, `${x}`)
         .withContent(x.toString())
         .withChildren(new Site(itemsInDirectory))
         .build();
@@ -118,15 +118,14 @@ test('Site', (t) => {
 
     t.test('#writeToPath', (st) => {
         const site = new Site([ci(1), cid(4, [ci(2), ci(3)])]);
-        return site.writeToPath('/').then(() => {
-            st.assert(writeFileStub.calledWith('/1', '1'), 'file 1');
-            st.assert(writeFileStub.calledWith('/4/2', '2'), 'file 2');
-            st.assert(writeFileStub.calledWith('/4/3', '3'), 'file 3');
+        return site.writeToPath('/test').then(() => {
+            st.assert(writeFileStub.calledWith('/test/1', '1'), 'file 1');
+            st.assert(writeFileStub.calledWith('/test/4/2', '2'), 'file 2');
+            st.assert(writeFileStub.calledWith('/test/4/3', '3'), 'file 3');
         });
     });
 
     t.test('readSiteFromPath', (st) => {
-        // TODO: Write the test
         const path = '/a';
         const files = ['1'];
         readdirStub.withArgs(path).returns(Promise.resolve(files));
