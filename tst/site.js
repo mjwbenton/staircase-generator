@@ -116,16 +116,15 @@ test('Site', (t) => {
         st.end();
     });
 
-    t.test('#writeToPath', (st) => {
+    t.test('#writeToPath', async (st) => {
         const site = new Site([ci(1), cid(4, [ci(2), ci(3)])]);
-        return site.writeToPath('/test').then(() => {
-            st.assert(writeFileStub.calledWith('/test/1', '1'), 'file 1');
-            st.assert(writeFileStub.calledWith('/test/4/2', '2'), 'file 2');
-            st.assert(writeFileStub.calledWith('/test/4/3', '3'), 'file 3');
-        });
+        await site.writeToPath('/test');
+        st.assert(writeFileStub.calledWith('/test/1', '1'), 'file 1');
+        st.assert(writeFileStub.calledWith('/test/4/2', '2'), 'file 2');
+        st.assert(writeFileStub.calledWith('/test/4/3', '3'), 'file 3');
     });
 
-    t.test('readSiteFromPath', (st) => {
+    t.test('readSiteFromPath', async (st) => {
         const path = '/a';
         const files = ['1'];
         readdirStub.withArgs(path).returns(Promise.resolve(files));
@@ -134,15 +133,14 @@ test('Site', (t) => {
                 return false;
             }
         }));
-        return readSiteFromPath(path).then((site) => {
-            const contentItem = site.getNthContentItem(0);
-            st.equals(contentItem.getFilePath(),
-                    '1', 'correct file path');
-            st.equals(contentItem.getFileName(),
-                    '1', 'correct file name');
-            st.false(contentItem.isDirectory(), 'not a directory');
-            st.equals(contentItem.getContent(), '/a/1', 'correct content');
-        });
+        const site = await readSiteFromPath(path);
+        const contentItem = site.getNthContentItem(0);
+        st.equals(contentItem.getFilePath(),
+                '1', 'correct file path');
+        st.equals(contentItem.getFileName(),
+                '1', 'correct file name');
+        st.false(contentItem.isDirectory(), 'not a directory');
+        st.equals(contentItem.getContent(), '/a/1', 'correct content');
     });
 
 });
