@@ -16,7 +16,7 @@ const wrapReact = proxyquire('../../src/transforms/wrap-react', {
 
 test('wrapReact', (t) => {
     const content = 'whatever';
-    const expectedContent = '<!doctype html>\n<div>whatever</div>';
+    const expectedContent = '<div>whatever</div>';
     const ci = new ContentItemBuilder(false, '/path/')
         .withContent(content)
         .build();
