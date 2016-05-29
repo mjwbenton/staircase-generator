@@ -33,7 +33,7 @@ function ci(x : number) {
         .build();
 }
 
-function cid(x : number, cis : [ContentItem]) {
+function cid(x : number, cis : ContentItem[]) {
     const itemsInDirectory = cis.map(
             (i) => i.withPath(`${x}/${i.getFilePath()}`));
     return new ContentItemBuilder(true, `${x}`)
