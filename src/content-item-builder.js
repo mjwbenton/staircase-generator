@@ -8,23 +8,30 @@ export class ContentItem {
     _path : string;
     _children : Site;
     _content : string;
-    _extra : any;
+    _meta : {[key : string] : any};
 
     constructor(builder : Builder) {
         this._isDirectory = builder._isDirectory;
         this._path = builder._path;
         this._children = builder._children;
         this._content = builder._content;
-        this._extra = builder._extra;
+        this._meta = builder._meta;
     }
 
     withContent(newContent : string) : ContentItem {
         return this._toBuilder().withContent(newContent).build();
     }
 
-    withMergedExtra(additionalExtra : any) : ContentItem {
-        const newExtra = Object.assign({}, this._extra, additionalExtra);
-        return this._toBuilder().withExtra(newExtra).build();
+    withMeta(key : string, obj : any) {
+        const newMeta = Object.assign({}, this._meta, {
+            [key]: obj
+        });
+        return this._toBuilder().withMeta(newMeta).build();
+    }
+
+    withMergedMeta(additionalMeta : {[key : string] : any}) : ContentItem {
+        const newMeta = Object.assign({}, this._meta, additionalMeta);
+        return this._toBuilder().withMeta(newMeta).build();
     }
 
     withChildren(children : Site) : ContentItem {
@@ -47,8 +54,8 @@ export class ContentItem {
         return filepath.create(this._path).basename();
     }
 
-    getExtra() : any {
-        return this._extra;
+    getMeta(key : string) : any {
+        return this._meta[key];
     }
 
     getChildren() : Site {
@@ -63,7 +70,7 @@ export class ContentItem {
         return new Builder(this._isDirectory, this._path)
             .withContent(this._content)
             .withChildren(this._children)
-            .withExtra(this._extra);
+            .withMeta(this._meta);
     }
 }
 
@@ -72,14 +79,14 @@ export default class Builder {
     _path : string;
     _children : Site;
     _content : string;
-    _extra : any;
+    _meta : {[key : string] : any};
 
     constructor(isDirectory : boolean, path : string) {
         this._isDirectory = isDirectory;
         this._path = path;
         this._children = new Site([]);
         this._content = '';
-        this._extra = {};
+        this._meta = {};
     }
 
     withPath(path : string) : Builder {
@@ -97,8 +104,8 @@ export default class Builder {
         return this;
     }
 
-    withExtra(extra : any) : Builder {
-        this._extra = extra;
+    withMeta(meta : {[key : string] : any}) : Builder {
+        this._meta = meta;
         return this;
     }
 

@@ -8,22 +8,22 @@ test('ContentItem', (t) => {
     t.test('Constructs item', (st) => {
         const item = new ContentItemBuilder(false, '/this/is/the/path.html')
             .withContent('content')
-            .withExtra({ extra: 'stuff' })
+            .withMeta({ extra: 'stuff' })
             .build();
         st.equals(item.getContent(), 'content', 'correct content');
         st.end();
     });
 
-    t.test('#withMergedExtra merges objects', (st) => {
-        const initialExtra = { extra: 'stuff' };
-        const newExtra = { other: 'stuff' };
+    t.test('#withMergedMeta merges objects', (st) => {
+        const initialMeta = { extra: 'extra' };
+        const newMeta = { other: 'stuff' };
         let item = new ContentItemBuilder(false, '/this/is/the/path.html')
-            .withExtra(initialExtra)
+            .withMeta(initialMeta)
             .build();
-        st.deepEquals(item.getExtra(), initialExtra, 'correct initial extras');
-        item = item.withMergedExtra(newExtra);
-        st.deepEquals(item.getExtra(), { ...initialExtra, ...newExtra },
-                'correct merged extras');
+        st.equals(item.getMeta('extra'), 'extra', 'correct initial meta');
+        item = item.withMergedMeta(newMeta);
+        st.deepEquals([item.getMeta('extra'), item.getMeta('other')],
+            ['extra', 'stuff'], 'correct merged extras');
         st.end();
     });
 

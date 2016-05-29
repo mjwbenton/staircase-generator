@@ -11,6 +11,6 @@ export default function handleFrontMatter(site : Site) : Site {
         const frontMatter = yamlFront.loadFront(item.getContent());
         const content = frontMatter[CONTENT_KEY];
         delete frontMatter[CONTENT_KEY];
-        return item.withMergedExtra(frontMatter).withContent(content);
+        return item.withMergedMeta(frontMatter).withContent(content);
     });
 }
