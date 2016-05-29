@@ -48,6 +48,22 @@ function intContent(x : ContentItem) {
 
 test('Site', (t) => {
 
+    t.test('constructor', (st) => {
+        const site = new Site([]);
+        st.deepEquals(site.meta, {}, 'meta defaults to empty object');
+        st.end();
+    });
+
+    t.test('#withMeta/#getMeta', (st) => {
+        const key = 'key';
+        const value = 'value';
+        const site = new Site([]);
+        const newSite = site.withMeta(key, value);
+        st.equals(newSite.getMeta(key), value);
+        st.assert(site.getMeta(key) === undefined);
+        st.end();
+    });
+
     t.test('#mapWithFilters', (st) => {
         {
             const site = new Site([ci(1), ci(2), ci(3), ci(4)])

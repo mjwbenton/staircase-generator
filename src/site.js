@@ -11,9 +11,22 @@ const UTF8 = 'utf8';
 
 export class Site {
     items : ContentItem[];
+    meta : {[key : string] : any};
 
-    constructor(items : ContentItem[]) {
+    constructor(items : ContentItem[], meta : {[key : string] : any} = {}) {
         this.items = items;
+        this.meta = meta;
+    }
+
+    withMeta(key : string, obj : any) {
+        const newMeta = Object.assign({}, this.meta, {
+            [key]: obj
+        });
+        return new Site([...this.items], newMeta);
+    }
+
+    getMeta(key : string) : any {
+        return this.meta[key];
     }
 
     getNthContentItem(n : number) : ContentItem {
