@@ -25,6 +25,10 @@ export class Site {
         return new Site([...this.items], newMeta);
     }
 
+    withChildren(children : ContentItem[]) {
+        return new Site(children, this.meta);
+    }
+
     getMeta(key : string) : any {
         return this.meta[key];
     }
@@ -54,7 +58,7 @@ export class Site {
             // Actually run the map method
             return map(toMapItem);
         });
-        return new Site(newItems);
+        return this.withChildren(newItems);
     }
 
     forEachWithFilters(filters : Array<(item : ContentItem) => bool>,
