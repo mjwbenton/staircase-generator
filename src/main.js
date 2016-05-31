@@ -10,14 +10,19 @@ import buildNavigation from './features/navigation';
 import compose from './compose';
 
 async function generateSite() {
-    const site = await readSiteFromPath('./content');
-    const transformedSite = compose(
-        handleFrontMatter,
-        buildNavigation,
-        handleMarkdown,
-        wrapReact(Page),
-        addDoctype
-    )(site);
-    await transformedSite.writeToPath('./output');
+    try {
+        const site = await readSiteFromPath('./content');
+        const transformedSite = compose(
+            handleFrontMatter,
+            buildNavigation,
+            handleMarkdown,
+            wrapReact(Page),
+            addDoctype
+        )(site);
+        await transformedSite.writeToPath('./output');
+    } catch (err) {
+        console.error(`Error generating site: ${err}`);
+        throw err;
+    }
 }
 generateSite();
