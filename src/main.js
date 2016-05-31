@@ -12,7 +12,7 @@ import compose from './compose';
 async function generateSite() {
     try {
         const site = await readSiteFromPath('./content');
-        const transformedSite = compose(
+        const transformedSite = await compose(
             handleFrontMatter,
             buildNavigation,
             handleMarkdown,
