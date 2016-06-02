@@ -61,6 +61,30 @@ export class Site {
         return this.withChildren(newItems);
     }
 
+    async mapWithFiltersAsync(
+            filters : Array<(item : ContentItem) => bool>,
+            map : (item : ContentItem) => Promise<ContentItem>)
+            : Promise<Site> {
+        const newItemsPromises = this.items.map(async (item) => {
+            let toMapItem = item;
+            if (item.isDirectory()) {
+                const newSubSite = await item.getChildren()
+                    .mapWithFiltersAsync(filters, map);
+                toMapItem = item.withChildren(newSubSite);
+            }
+            // Filter out if any of the filters return true
+            const filtered = filters.some((filter) => {
+                return filter(toMapItem);
+            });
+            if (filtered) {
+                return toMapItem;
+            }
+            // Actually run the map method
+            return await map(toMapItem);
+        });
+        return this.withChildren(await Promise.all(newItemsPromises));
+    }
+
     forEachWithFilters(filters : Array<(item : ContentItem) => bool>,
             forEach : (item : ContentItem) => void) {
         this.items.forEach((item) => {

@@ -7,6 +7,7 @@ import addDoctype from './transforms/add-doctype';
 import { readSiteFromPath } from './site';
 import Page from './components/Page';
 import buildNavigation from './features/navigation';
+import buildFlickrSet from './features/flickr-set';
 import compose from './compose';
 
 async function generateSite() {
@@ -15,6 +16,7 @@ async function generateSite() {
         const transformedSite = await compose(
             handleFrontMatter,
             buildNavigation,
+            buildFlickrSet('ad7d7f87cbe5cdf41c1fe66808d5cc7d'),
             handleMarkdown,
             wrapReact(Page),
             addDoctype
