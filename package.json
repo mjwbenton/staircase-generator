@@ -1,7 +1,7 @@
 {
-  "name": "new.mattbenton.co.uk",
-  "version": "1.0.0",
-  "description": "",
+  "name": "staircase",
+  "version": "0.1.0",
+  "description": "A collection of steps making it easy to build a static website.",
   "main": "src/index.js",
   "dependencies": {
     "babel-polyfill": "^6.9.0",

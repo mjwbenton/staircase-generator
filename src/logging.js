@@ -9,7 +9,7 @@ export function setLogger(_logger : any) {
 }
 
 export function setupDefaultLogger() {
-    logger = bunyan.createLogger({ name: 'new.mattbenton.co.uk'});
+    logger = bunyan.createLogger({ name: 'staircase'});
 }
 
 export function getLogger(module : string) {
