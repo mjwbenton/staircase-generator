@@ -9,8 +9,12 @@ import Page from './components/Page';
 import buildNavigation from './features/navigation';
 import buildFlickrSet from './features/flickr-set';
 import compose from './compose';
+import { setupDefaultLogger, getLogger } from './logging';
+
+setupDefaultLogger();
 
 async function generateSite() {
+    getLogger('main').info('Starting Generation');
     try {
         const site = await readSiteFromPath('./content');
         const transformedSite = await compose(
