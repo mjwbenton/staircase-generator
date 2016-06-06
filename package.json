@@ -2,7 +2,7 @@
   "name": "staircase",
   "version": "0.1.0",
   "description": "A collection of steps making it easy to build a static website.",
-  "main": "src/index.js",
+  "main": "build/index.js",
   "dependencies": {
     "babel-polyfill": "^6.9.0",
     "bunyan": "^1.8.1",
@@ -12,7 +12,6 @@
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
     "request-promise": "^3.0.0",
-    "seamless-immutable": "^6.0.1",
     "yaml-front-matter": "^3.4.0"
   },
   "devDependencies": {
@@ -30,6 +29,7 @@
     "eslint-plugin-flowtype": "^2.2.7",
     "eslint-plugin-react": "^5.0.1",
     "flow-bin": "^0.23.1",
+    "flow-copy-source": "^1.0.2",
     "glob": "^7.0.3",
     "isparta": "^4.0.0",
     "istanbul": "^0.4.3",
@@ -39,12 +39,15 @@
     "tape": "^4.5.1"
   },
   "scripts": {
-    "test": "node testHelper.js",
+    "all": "npm run build && npm run test && npm run flow && npm run lint",
+    "babel": "babel src -d build",
+    "build": "npm run babel && npm run flow-copy-source",
     "coverage": "isparta cover --root src --include-all-sources --report html testHelper.js",
     "flow": "flow; test $? -eq 0 -o $? -eq 2",
+    "flow-copy-source": "flow-copy-source src build",
     "lint": "eslint src tst",
     "lint:fix": "eslint --fix src tst",
-    "all": "npm run test && npm run flow && npm run lint"
+    "test": "node testHelper.js"
   },
   "author": "Matt Benton <me@mattbenton.co.uk>",
   "license": "MIT"
