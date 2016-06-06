@@ -49,6 +49,6 @@
     "lint:fix": "eslint --fix src tst",
     "test": "node testHelper.js"
   },
-  "author": "Matt Benton <me@mattbenton.co.uk>",
+  "author": "Matt Benton <m@mattb.tech>",
   "license": "MIT"
 }
