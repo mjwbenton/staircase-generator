@@ -1,8 +1,8 @@
 /* @flow */
 
 import type Site from '../site';
-
 import { skipMeta, skipDirectories } from '../transforms/skip-items';
+import {getLogger} from '../logging';
 
 export const NAVIGATION_META_KEY = 'navigation';
 
@@ -16,25 +16,29 @@ export type NavigationEntry = {
 };
 
 export default function buildNavigation(site : Site) : Site {
+    const log = getLogger('navigation');
     const navigation : NavigationEntry[] = [];
     site.forEachWithFilters([skipMeta, skipDirectories], (item) => {
-        const navigationEntry : NavigationEntry = {
-            title: item.getMeta(TITLE_KEY),
-            index: item.getMeta(INDEX_KEY),
-            path: item.getFilePath()
-        };
-        navigation.push(navigationEntry);
+        if (item.getMeta(INDEX_KEY)) {
+            log.debug(`Entry in file: ${item.getFilePath()}`);
+            const navigationEntry : NavigationEntry = {
+                title: item.getMeta(TITLE_KEY),
+                index: item.getMeta(INDEX_KEY),
+                path: item.getFilePath()
+            };
+            navigation.push(navigationEntry);
+        }
     });
-    navigation.sort((a, b) => {
-        const aIndex = a[INDEX_KEY];
-        const bIndex = b[INDEX_KEY];
-        if (aIndex < bIndex) {
+    const sortedNavigation = navigation.sort((a, b) => {
+        if (a.index < b.index) {
             return -1;
-        } else if (aIndex > bIndex) {
+        } else if (a.index > b.index) {
             return 1;
         } else {
             return 0;
         }
     });
-    return site.withMeta(NAVIGATION_META_KEY, navigation);
+    log.info('Final navigation entries:'
+            + sortedNavigation.map((x) => x.title).toString());
+    return site.withMeta(NAVIGATION_META_KEY, sortedNavigation);
 }
