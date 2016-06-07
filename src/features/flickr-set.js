@@ -49,12 +49,13 @@ async function getOwner(apiKey : string, setId : string) : Promise<string> {
 }
 
 async function getPhotos(apiKey : string, setId : string)
-        : Promise<{ id : string, url : string}[]> {
+        : Promise<{ id : string, url : string, title : string }[]> {
     const photosResponse = await callFlickr(apiKey, FLICKR_PHOTOS_METHOD, {
         [PHOTOSET_ID_KEY]: setId
     });
     return photosResponse.photoset.photo.map((p) => ({
         id: p.id,
+        title: p.title,
         url: buildUrl(p)
     }));
 }
@@ -64,7 +65,8 @@ export const PHOTOS_META_KEY = 'photos';
 export type Photo = {
     id : string,
     url : string,
-    pageUrl : string
+    pageUrl : string,
+    title : string
 };
 
 export default function buildFlickrSetOuter(apiKey : string) {
