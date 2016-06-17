@@ -14,9 +14,11 @@ const FLICKR_SET_METHOD = 'flickr.photosets.getInfo';
 const FLICKR_PHOTOS_METHOD = 'flickr.photosets.getPhotos';
 const PHOTOSET_ID_KEY = 'photoset_id';
 
-function buildUrl({ id, farm, server, secret } : {[key : string] : string})
+function buildUrl(
+        protocol : 'http'|'https',
+        { id, farm, server, secret } : {[key : string] : string})
         : string {
-    return `http://farm${farm}.static.flickr.com/${server}`
+    return `${protocol}://farm${farm}.static.flickr.com/${server}`
             + `/${id}_${secret}_z.jpg`;
 }
 
@@ -49,14 +51,16 @@ async function getOwner(apiKey : string, setId : string) : Promise<string> {
 }
 
 async function getPhotos(apiKey : string, setId : string)
-        : Promise<{ id : string, url : string, title : string }[]> {
+        : Promise<{ id : string, url : string,
+                    secureUrl : string, title : string }[]> {
     const photosResponse = await callFlickr(apiKey, FLICKR_PHOTOS_METHOD, {
         [PHOTOSET_ID_KEY]: setId
     });
     return photosResponse.photoset.photo.map((p) => ({
         id: p.id,
         title: p.title,
-        url: buildUrl(p)
+        url: buildUrl('http', p),
+        secureUrl: buildUrl('https', p)
     }));
 }
 
@@ -65,6 +69,7 @@ export const PHOTOS_META_KEY = 'photos';
 export type Photo = {
     id : string,
     url : string,
+    secureUrl : string,
     pageUrl : string,
     title : string
 };
