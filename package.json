@@ -1,5 +1,5 @@
 {
-  "name": "staircase",
+  "name": "staircase-generator",
   "version": "0.1.0",
   "description": "A collection of steps making it easy to build a static website.",
   "main": "build/index.js",
