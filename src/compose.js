@@ -1,6 +1,7 @@
 /* @flow */
 
 import type Site from './site';
+import { getLogger } from './logging';
 
 export default function compose(...funcs
         : Array<(site : Site) => Site|Promise<Site>>)
@@ -21,8 +22,9 @@ async function callAndRecurse(site : Site,
     try {
         nextSite = await func(site);
     } catch (err) {
-        console.error(`Error in transform function: ${func.name}`);
-        console.error(err);
+        const log = getLogger('compose');
+        log.error(`Error in transform function: ${func.name}`);
+        log.error(err);
         throw err;
     }
     return callAndRecurse(nextSite, remainingFunc);
