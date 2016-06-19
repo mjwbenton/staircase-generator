@@ -1,5 +1,7 @@
 require('babel-register');
-require('babel-polyfill');
+var setLogger = require('./src/logging').setLogger;
+var bunyan = require('bunyan');
+setLogger(bunyan.createLogger({ name: 'staircase', level: 'error' }));
 var glob = require('glob');
 function runForPattern(pattern) {
     glob(pattern, function(err, files) {
