@@ -4,7 +4,7 @@
   "description": "A collection of steps making it easy to build a static website.",
   "main": "build/index.js",
   "dependencies": {
-    "babel-polyfill": "^6.9.0",
+    "babel-runtime": "^6.9.2",
     "bunyan": "^1.8.1",
     "filepath": "^1.1.0",
     "fs-promise": "^0.5.0",
@@ -21,6 +21,7 @@
     "babel-plugin-transform-class-properties": "^6.6.0",
     "babel-plugin-transform-flow-strip-types": "^6.7.0",
     "babel-plugin-transform-object-rest-spread": "^6.6.5",
+    "babel-plugin-transform-runtime": "^6.9.0",
     "babel-preset-es2015": "^6.6.0",
     "babel-preset-react": "^6.5.0",
     "babel-register": "^6.7.2",
