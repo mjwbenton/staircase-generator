@@ -10,7 +10,7 @@ test('ContentItem', (t) => {
             .withContent('content')
             .withMeta({ extra: 'stuff' })
             .build();
-        st.equals(item.getContent(), 'content', 'correct content');
+        st.equals(item.content, 'content', 'correct content');
         st.end();
     });
 
@@ -20,9 +20,10 @@ test('ContentItem', (t) => {
         let item = new ContentItemBuilder(false, '/this/is/the/path.html')
             .withMeta(initialMeta)
             .build();
-        st.equals(item.getMeta('extra'), 'extra', 'correct initial meta');
-        item = item.withMergedMeta(newMeta);
-        st.deepEquals([item.getMeta('extra'), item.getMeta('other')],
+        st.equals(item.meta.extra, 'extra', 'correct initial meta');
+        item = ContentItemBuilder.fromItem(item).withMergedMeta(newMeta)
+                .build();
+        st.deepEquals([item.meta.extra, item.meta.other],
             ['extra', 'stuff'], 'correct merged extras');
         st.end();
     });
@@ -31,13 +32,13 @@ test('ContentItem', (t) => {
         const file = 'file.html';
         const folder = '/folder/';
         const item = new ContentItemBuilder(true, folder + file).build();
-        st.equals(item.getFileName(), file, 'correct filename');
+        st.equals(item.filename, file, 'correct filename');
         st.end();
     });
 
     t.test('#isDirectory returns input from constructor', (st) => {
         const item = new ContentItemBuilder(true, '/whatever').build();
-        st.ok(item.isDirectory(), 'correct isDirectory response');
+        st.ok(item.isDirectory, 'correct isDirectory response');
         st.end();
     });
 

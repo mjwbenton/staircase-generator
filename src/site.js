@@ -33,7 +33,7 @@ export class Site {
         return this.meta[key];
     }
 
-    getNthContentItem(n : number) : ContentItem {
+    getNthContentItem(n: number): ContentItem {
         return this.items[n];
     }
 
@@ -43,10 +43,11 @@ export class Site {
         const newItems = this.items.map((item) => {
             let toMapItem = item;
             // If directory, start by running over all the children
-            if (item.isDirectory()) {
-                const newSubSite = item.getChildren().mapWithFilters(
+            if (item.isDirectory) {
+                const newSubSite = item.children.mapWithFilters(
                     filters, map);
-                toMapItem = item.withChildren(newSubSite);
+                toMapItem = ContentItemBuilder.fromItem(item)
+                        .withChildren(newSubSite).build();
             }
             // Filter out if any of the filters return true
             const filtered = filters.some((filter) => {
@@ -67,10 +68,11 @@ export class Site {
             : Promise<Site> {
         const newItemsPromises = this.items.map(async (item) => {
             let toMapItem = item;
-            if (item.isDirectory()) {
-                const newSubSite = await item.getChildren()
+            if (item.isDirectory) {
+                const newSubSite = await item.children
                     .mapWithFiltersAsync(filters, map);
-                toMapItem = item.withChildren(newSubSite);
+                toMapItem = ContentItemBuilder.fromItem(item)
+                        .withChildren(newSubSite).build();
             }
             // Filter out if any of the filters return true
             const filtered = filters.some((filter) => {
@@ -89,8 +91,8 @@ export class Site {
             forEach : (item : ContentItem) => void) {
         this.items.forEach((item) => {
             // If directory, start by running over all the children
-            if (item.isDirectory()) {
-                item.getChildren().forEachWithFilters(filters, forEach);
+            if (item.isDirectory) {
+                item.children.forEachWithFilters(filters, forEach);
             }
             // Filter out if any of the filters return true
             const filtered = filters.some((filter) => {
@@ -119,12 +121,12 @@ export class Site {
         const outputPath = filepath.create(outputDir);
         await ensureDirExists(outputPath.valueOf());
         this.forEachWithFiltersTopLevel([skipMeta], (item) => {
-            const itemPath = outputPath.append(item.getFileName())
+            const itemPath = outputPath.append(item.filename)
                 .valueOf();
-            if (item.isDirectory()) {
-                item.getChildren().writeToPath(itemPath);
+            if (item.isDirectory) {
+                item.children.writeToPath(itemPath);
             } else {
-                fsp.writeFile(itemPath, item.getContent());
+                fsp.writeFile(itemPath, item.content);
             }
         });
     }

@@ -19,12 +19,12 @@ export default function buildNavigation(site : Site) : Site {
     const log = getLogger('navigation');
     const navigation : NavigationEntry[] = [];
     site.forEachWithFilters([skipMeta, skipDirectories], (item) => {
-        if (item.getMeta(INDEX_KEY)) {
-            log.debug(`Entry in file: ${item.getFilePath()}`);
+        if (item.meta[INDEX_KEY]) {
+            log.debug(`Entry in file: ${item.path}`);
             const navigationEntry : NavigationEntry = {
-                title: item.getMeta(TITLE_KEY),
-                index: item.getMeta(INDEX_KEY),
-                path: item.getFilePath()
+                title: item.meta[TITLE_KEY],
+                index: item.meta[INDEX_KEY],
+                path: item.path
             };
             navigation.push(navigationEntry);
         }

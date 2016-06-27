@@ -1,6 +1,7 @@
 /* @flow */
 
 import type Site from '../site';
+import ContentItemBuilder from '../content-item-builder';
 import { getLogger } from '../logging';
 
 import React from 'react';
@@ -13,11 +14,12 @@ export default function wrapReactOuter(Component : any) {
         const log = getLogger('wrapReact');
         const newSite = site.mapWithFilters([skipMeta, skipDirectories],
             (item) => {
-                log.info(`Rendering page '${item.getFileName()}' with react`);
+                log.info(`Rendering page '${item.filename}' with react`);
                 const html = ReactDOMServer.renderToStaticMarkup(
                     <Component item={item} site={site} />
                 );
-                return item.withContent(html);
+                return ContentItemBuilder.fromItem(item)
+                        .withContent(html).build();
             });
         log.info('Finished wrapReact');
         return newSite;

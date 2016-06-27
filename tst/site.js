@@ -35,7 +35,9 @@ function ci(x : number) {
 
 function cid(x : number, cis : ContentItem[]) {
     const itemsInDirectory = cis.map(
-            (i) => i.withPath(`${x}/${i.getFilePath()}`));
+        (i) => ContentItemBuilder.fromItem(i)
+                .withPath(`${x}/${i.path}`).build()
+    );
     return new ContentItemBuilder(true, `${x}`)
         .withContent(x.toString())
         .withChildren(new Site(itemsInDirectory))
@@ -43,7 +45,7 @@ function cid(x : number, cis : ContentItem[]) {
 }
 
 function intContent(x : ContentItem) {
-    return parseInt(x.getContent());
+    return parseInt(x.content);
 }
 
 test('Site', (t) => {
@@ -59,8 +61,8 @@ test('Site', (t) => {
         const value = 'value';
         const site = new Site([]);
         const newSite = site.withMeta(key, value);
-        st.equals(newSite.getMeta(key), value);
-        st.assert(site.getMeta(key) === undefined);
+        st.equals(newSite.meta[key], value);
+        st.assert(site.meta[key] === undefined);
         st.end();
     });
 
@@ -68,7 +70,7 @@ test('Site', (t) => {
         {
             const site = new Site([ci(1), ci(2), ci(3), ci(4)])
                     .mapWithFilters([],
-                        (x) => ci(parseInt(x.getContent()) * 2));
+                        (x) => ci(parseInt(x.content) * 2));
             st.deepEquals(site.items, [ci(2), ci(4), ci(6), ci(8)],
                     'map applies to all items with no filters');
         }
@@ -86,8 +88,8 @@ test('Site', (t) => {
 
     t.test('#forEachWithFilters', (st) => {
         const ci3 = cid(3, [ci(1), ci(2)]);
-        const ci1 = ci3.getChildren().getNthContentItem(0);
-        const ci2 = ci3.getChildren().getNthContentItem(1);
+        const ci1 = ci3.children.getNthContentItem(0);
+        const ci2 = ci3.children.getNthContentItem(1);
         const ci4 = ci(4);
         {
             const result = [];
@@ -151,12 +153,10 @@ test('Site', (t) => {
         }));
         const site = await readSiteFromPath(path);
         const contentItem = site.getNthContentItem(0);
-        st.equals(contentItem.getFilePath(),
-                '1', 'correct file path');
-        st.equals(contentItem.getFileName(),
-                '1', 'correct file name');
-        st.false(contentItem.isDirectory(), 'not a directory');
-        st.equals(contentItem.getContent(), '/a/1', 'correct content');
+        st.equals(contentItem.path, '1', 'correct file path');
+        st.equals(contentItem.filename, '1', 'correct file name');
+        st.false(contentItem.isDirectory, 'not a directory');
+        st.equals(contentItem.content, '/a/1', 'correct content');
     });
 
 });

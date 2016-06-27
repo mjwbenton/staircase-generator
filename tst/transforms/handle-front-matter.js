@@ -20,10 +20,10 @@ const handleFrontMatter = proxyquire('../../src/transforms/handle-front-matter',
 test('handleFrontMatter', (t) => {
     const item = new ContentItemBuilder(false, '/whatever.html').build();
     const site = new Site([item]);
-    const newSite = handleFrontMatter(site);
-    t.equals(newSite.getNthContentItem(0).getContent(), 'the content',
+    const newSite: Site = handleFrontMatter(site);
+    t.equals(newSite.getNthContentItem(0).content, 'the content',
         'content without front matter');
-    t.equals(newSite.getNthContentItem(0).getMeta('some'), 'stuff',
+    t.equals(newSite.getNthContentItem(0).meta.some, 'stuff',
         'front matter added to extras');
     t.end();
 });

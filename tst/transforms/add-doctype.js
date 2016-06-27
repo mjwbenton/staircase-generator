@@ -12,6 +12,6 @@ test('addDoctype', (t) => {
         .build();
     const site = new Site([ci]);
     const newSite = addDoctype(site);
-    t.equals(newSite.items[0].getContent(), `<!doctype html>\n${content}`);
+    t.equals(newSite.items[0].content, `<!doctype html>\n${content}`);
     t.end();
 });

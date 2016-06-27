@@ -1,6 +1,7 @@
 /* @flow */
 
 import type Site from '../site';
+import ContentItemBuilder from '../content-item-builder';
 import {getLogger} from '../logging';
 import request from 'request-promise';
 
@@ -94,11 +95,11 @@ export default function buildFlickrSetOuter(apiKey : string) {
         return site.mapWithFiltersAsync(
             [skipMeta, skipDirectories],
             async (item) => {
-                const setId : string = item.getMeta(FLICKR_SET_META_KEY);
+                const setId : string = item.meta[FLICKR_SET_META_KEY];
                 if (typeof setId === 'string') {
                     const photos = await getPhotos(apiKey, setId);
-                    return item.withMergedMeta(
-                        {[PHOTOS_META_KEY]: photos});
+                    return ContentItemBuilder.fromItem(item).withMergedMeta(
+                        {[PHOTOS_META_KEY]: photos}).build();
                 }
                 return item;
             }

@@ -19,6 +19,6 @@ test('handleMarkdown', (t) => {
         .build();
     const site = new Site([item]);
     const newSite = handleMarkdown(site);
-    t.equals(newSite.items[0].getContent(), FAKE_MARKUP);
+    t.equals(newSite.items[0].content, FAKE_MARKUP);
     t.end();
 });

@@ -3,11 +3,12 @@
 import test from 'tape';
 import Site from '../../src/site';
 import ContentItemBuilder from '../../src/content-item-builder';
+import type { ContentItem } from '../../src/content-item-builder';
 import React from 'react';
 import wrapReact from '../../src/transforms/wrap-react';
 
-function Component(props) {
-    return <div>{props.item.getContent()}</div>;
+function Component({item}: {item: ContentItem}) {
+    return <div>{item.content}</div>;
 }
 
 test('wrapReact', (t) => {
@@ -18,6 +19,6 @@ test('wrapReact', (t) => {
         .build();
     const site = new Site([ci]);
     const newSite = wrapReact(Component)(site);
-    t.equals(newSite.items[0].getContent(), expectedContent);
+    t.equals(newSite.getNthContentItem(0).content, expectedContent);
     t.end();
 });

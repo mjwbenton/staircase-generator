@@ -2,77 +2,24 @@
 
 import filepath from 'filepath';
 import Site from './site';
+import { Record } from 'immutable';
 
-export class ContentItem {
-    _isDirectory : boolean;
-    _path : string;
-    _children : Site;
-    _content : string;
-    _meta : {[key : string] : any};
-
-    constructor(builder : Builder) {
-        this._isDirectory = builder._isDirectory;
-        this._path = builder._path;
-        this._children = builder._children;
-        this._content = builder._content;
-        this._meta = builder._meta;
-    }
-
-    withContent(newContent : string) : ContentItem {
-        return this._toBuilder().withContent(newContent).build();
-    }
-
-    withMeta(key : string, obj : any) {
-        const newMeta = Object.assign({}, this._meta, {
-            [key]: obj
-        });
-        return this._toBuilder().withMeta(newMeta).build();
-    }
-
-    withMergedMeta(additionalMeta : {[key : string] : any}) : ContentItem {
-        const newMeta = Object.assign({}, this._meta, additionalMeta);
-        return this._toBuilder().withMeta(newMeta).build();
-    }
-
-    withChildren(children : Site) : ContentItem {
-        return this._toBuilder().withChildren(children).build();
-    }
-
-    withPath(path : string) : ContentItem {
-        return this._toBuilder().withPath(path).build();
-    }
-
-    getContent() : string {
-        return this._content;
-    }
-
-    getFilePath() : string {
-        return this._path;
-    }
-
-    getFileName() : string {
-        return filepath.create(this._path).basename();
-    }
-
-    getMeta(key : string) : any {
-        return this._meta[key];
-    }
-
-    getChildren() : Site {
-        return this._children;
-    }
-
-    isDirectory() : boolean {
-        return this._isDirectory;
-    }
-
-    _toBuilder() : Builder {
-        return new Builder(this._isDirectory, this._path)
-            .withContent(this._content)
-            .withChildren(this._children)
-            .withMeta(this._meta);
-    }
+export type ContentItem = {
+    isDirectory: boolean,
+    path: string,
+    filename: string,
+    children: Site,
+    content: string,
+    meta: { [key: string]: any }
 }
+const ContentItemRecord = Record({
+    isDirectory: undefined,
+    path: undefined,
+    filename: undefined,
+    children: undefined,
+    content: undefined,
+    meta: undefined
+});
 
 export default class Builder {
     _isDirectory : boolean;
@@ -109,8 +56,30 @@ export default class Builder {
         return this;
     }
 
-    build() : ContentItem {
-        return new ContentItem(this);
+    withMergedMeta(meta: {[key:string]: any}): Builder {
+        this._meta = {
+            ...this._meta,
+            ...meta
+        };
+        return this;
+    }
+
+    build() {
+        return new ContentItemRecord({
+            isDirectory: this._isDirectory,
+            path: this._path,
+            children: this._children,
+            content: this._content,
+            meta: this._meta,
+            filename: filepath.create(this._path).basename()
+        });
+    }
+
+    static fromItem(item: ContentItem): Builder {
+        return new Builder(item.isDirectory, item.path)
+            .withChildren(item.children)
+            .withContent(item.content)
+            .withMeta(item.meta);
     }
 
 }

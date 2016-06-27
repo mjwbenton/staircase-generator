@@ -4,6 +4,8 @@
 .*/node_modules/react/lib/React.js
 .*/node_modules/react/lib/ReactDOM.js
 .*/node_modules/.*/test.*
+.*/node_modules/immutable/.*
+.*/build/.*
 
 [libs]
 interfaces/

@@ -1,6 +1,6 @@
 {
   "name": "staircase-generator",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A collection of steps making it easy to build a static website.",
   "main": "build/index.js",
   "dependencies": {
@@ -8,6 +8,7 @@
     "bunyan": "^1.8.1",
     "filepath": "^1.1.0",
     "fs-promise": "^0.5.0",
+    "immutable": "^3.8.1",
     "marked": "^0.3.5",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
