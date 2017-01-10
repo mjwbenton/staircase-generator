@@ -4,6 +4,7 @@
   "description": "A collection of steps making it easy to build a static website.",
   "main": "build/index.js",
   "dependencies": {
+    "async-disk-cache": "^1.0.9",
     "babel-runtime": "^6.9.2",
     "bunyan": "^1.8.1",
     "filepath": "^1.1.0",

@@ -4,8 +4,11 @@ import type Site from '../site';
 import ContentItemBuilder from '../content-item-builder';
 import {getLogger} from '../logging';
 import request from 'request-promise';
+import Cache from 'async-disk-cache';
 
 import { skipMeta, skipDirectories } from '../transforms/skip-items';
+
+const CACHE = new Cache('flickr-cache');
 
 const FLICKR_API_BASE_URL = 'https://api.flickr.com/services/rest/';
 const FLICKR_BASE_PARAMETERS = '?format=json&nojsoncallback=1';
@@ -33,10 +36,23 @@ async function callFlickr(apiKey : string, methodName : string,
     });
     url += paramsStr;
     try {
-        log.info(`Making request: ${paramsStr}`);
-        const result : string = await request(url);
-        log.info(`2xx response for: ${paramsStr}`);
-        return JSON.parse(result);
+        return await CACHE.get(url).then(({isCached, value}) => {
+            if (isCached) {
+                log.info(`Using cache for: ${paramsStr}`);
+                return JSON.parse(value);
+            } else {
+                log.info(`Making request: ${paramsStr}`);
+                const resultStrPromise = request(url);
+                log.info(`2xx response for: ${paramsStr}`);
+                return resultStrPromise
+                    .then((str) => {
+                        CACHE.set(url, str).then(() => {
+                            log.info(`Cached value for: ${paramsStr}`);
+                        });
+                        return JSON.parse(str);
+                    });
+            }
+        });
     } catch (err) {
         log.info(`Error calling flickr for ${paramsStr}: ${err}`);
         if (retryNumber < 2) {
