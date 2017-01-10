@@ -50,7 +50,8 @@
     "flow-copy-source": "flow-copy-source src build",
     "lint": "eslint src tst",
     "lint:fix": "eslint --fix src tst",
-    "test": "node testHelper.js"
+    "test": "node testHelper.js",
+    "clear-flickr-cache": "node clearFlickrCache.js"
   },
   "author": "Matt Benton <m@mattb.tech>",
   "license": "MIT"
