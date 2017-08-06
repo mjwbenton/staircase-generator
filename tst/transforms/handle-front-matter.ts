@@ -5,13 +5,13 @@ import ContentItemBuilder from '../../src/content-item-builder';
 
 const handleFrontMatter = proxyquire('../../src/transforms/handle-front-matter',
     {
-        'yaml-front-matter': {
-            loadFront() {
-                return {
-                    some: 'stuff',
-                    __content: 'the content'
-                };
-            }
+        'gray-matter': (content: string) => {
+            return {
+                data: {
+                    some: 'stuff'
+                },
+                content: 'the content'
+            };
         }
     }).default;
 
