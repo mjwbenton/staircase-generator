@@ -2,7 +2,7 @@ import Site from '../site';
 import ContentItemBuilder from '../content-item-builder';
 import {getLogger} from '../logging';
 import * as request from 'request-promise';
-import Cache from 'async-disk-cache';
+import * as Cache from 'async-disk-cache';
 
 import { skipMeta, skipDirectories } from '../transforms/skip-items';
 
