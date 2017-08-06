@@ -1,2 +1,1 @@
-import * as transforms from "./src/transforms";
-export default transforms;
+export * from "./src/transforms";

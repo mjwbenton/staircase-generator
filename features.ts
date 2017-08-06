@@ -1,2 +1,1 @@
-import * as features from "./src/features";
-export default features;
+export * from "./src/features";
