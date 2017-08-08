@@ -19,8 +19,7 @@ const FLICKR_SIZES_METHOD = 'flickr.photos.getSizes';
 const PHOTO_ID_KEY = 'photo_id';
 const PHOTOSET_ID_KEY = 'photoset_id';
 
-const LARGE_1600_SIZE_LABEL = 'Large 1600';
-const LARGE_SIZE_LABEL = 'Large';
+const WANTED_IMAGE_SIZES = new Set(['Medium', 'Medium 640', 'Medium 800', 'Large', 'Large 1600', 'Large 2048']);
 
 async function callFlickr(apiKey : string, methodName : string,
         params : { [key : string] : string }, retryNumber: number = 0): Promise<any> {
@@ -64,12 +63,19 @@ async function callFlickr(apiKey : string, methodName : string,
 
 export type Photo = {
     id : string,
-    url : string,
     pageUrl : string,
     title : string,
-    width: number,
-    height: number
+    mainSource: PhotoSource,
+    sources: PhotoSource[]
 };
+
+export type PhotoSource = {
+    url: string,
+    pageUrl: string,
+    width: number,
+    height: number,
+    sizeLabel: string
+}
 
 async function getPhotos(apiKey : string, setId : string): Promise<Array<Photo>> {
     const log = getLogger('flickr-set');
@@ -81,19 +87,22 @@ async function getPhotos(apiKey : string, setId : string): Promise<Array<Photo>>
             [PHOTO_ID_KEY]: p.id
         });
         try {
-            let size = sizes.sizes.size.find(
-                (el: any) => el.label === LARGE_1600_SIZE_LABEL);
-            if (size === undefined) {
-                size = sizes.sizes.size.find(
-                    (el: any) => el.label === LARGE_SIZE_LABEL);
-            }
+            const photoSources: PhotoSource[] = sizes.sizes.size
+                .filter((el: any) => WANTED_IMAGE_SIZES.has(el.label))
+                .map((el: any) => ({
+                    url: el.source,
+                    pageUrl: el.url,
+                    width: parseInt(el.width),
+                    height: parseInt(el.height),
+                    sizeLabel: el.label}))
+                .sort((a: PhotoSource, b: PhotoSource) => b.width - a.width);
+            const mainSource = photoSources[photoSources.length - 1];
             return {
                 id: p.id,
                 title: p.title,
-                width: size.width,
-                height: size.height,
-                url: size.source,
-                pageUrl: size.url
+                pageUrl: (mainSource || {pageUrl: ""}).pageUrl,
+                sources: photoSources,
+                mainSource: mainSource
             };
         } catch (ex) {
             log.error(`Error reading sizes for photo '${p.id}', `
