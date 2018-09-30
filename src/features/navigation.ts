@@ -6,10 +6,12 @@ export const NAVIGATION_META_KEY = 'navigation';
 
 const TITLE_KEY = 'title';
 const INDEX_KEY = 'index';
+const GROUP_KEY = 'group';
 
 export type NavigationEntry = {
     title: string,
     index: number,
+    group: number,
     path: string
 };
 
@@ -22,13 +24,18 @@ export default function buildNavigation(site : Site) : Site {
             const navigationEntry : NavigationEntry = {
                 title: item.meta[TITLE_KEY],
                 index: item.meta[INDEX_KEY],
+                group: item.meta[GROUP_KEY] || 0,
                 path: item.path
             };
             navigation.push(navigationEntry);
         }
     });
     const sortedNavigation = navigation.sort((a, b) => {
-        if (a.index < b.index) {
+        if (a.group < b.group) {
+            return -1;
+        } else if (a.group > b.group) {
+            return 1;
+        } else if (a.index < b.index) {
             return -1;
         } else if (a.index > b.index) {
             return 1;
