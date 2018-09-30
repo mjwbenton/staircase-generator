@@ -36,7 +36,7 @@
     "typescript": "^2.4.2"
   },
   "scripts": {
-    "all": "npm run build && npm run test && npm run flow && npm run lint",
+    "all": "npm run build && npm run test",
     "build": "tsc",
     "test": "ts-node node_modules/tape/bin/tape -r ./stopLogs ./tst/*.ts ./tst/**/*.ts",
     "clear-flickr-cache": "node clearFlickrCache.js"
