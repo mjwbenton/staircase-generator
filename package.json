@@ -10,7 +10,7 @@
     "fs-promise": "^0.5.0",
     "gray-matter": "^3.0.2",
     "immutable": "^3.8.1",
-    "marked": "^0.3.6",
+    "marked": "^0.3.18",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "request-promise": "^3.0.0"
