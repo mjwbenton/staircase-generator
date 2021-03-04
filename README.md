@@ -1,5 +1,7 @@
 # Staircase
 
+**Deprecated: I long since stopped using this in favor of an off-the-shelf solution.**
+
 A static website generator that has just the features I needed for [mattbenton.co.uk](https://mattbenton.co.uk).
 
 ## Status & Purpose
